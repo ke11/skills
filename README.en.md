@@ -61,17 +61,17 @@ Fetches real-time weather data from the [Hong Kong Observatory Open Data API](ht
 #### Example Output
 
 ```
-## Hong Kong Weather Overview
+● Hong Kong Weather Overview
 
-**Updated**: 2026-03-22 02:45 HKT
+Updated: 2026-03-22 20:45 HKT
 
-**Overview**: A fresh to strong easterly airstream is affecting the coast of Guangdong. A band of clouds is covering the area.
+Overview: The easterly airstream affecting the coast of Guangdong is gradually moderating.
 
-**Forecast** (Weather forecast for Hong Kong): Mainly cloudy. Minimum temperature around 21 degrees. Sunny periods during the day with a maximum of around 25 degrees. Fresh to strong easterly winds, with strong winds over high ground at first.
+Forecast (Weather forecast for Hong Kong): Mainly cloudy. Minimum temperature around 21 degrees. Sunny periods during the day with a maximum of around 27 degrees. Light easterly winds.
 
-**Outlook**: Sunny periods in the following few days. Hot during the day from mid to late week.
+Outlook: Sunny periods in the following few days. Hot during the day from mid to late week.
 
-_Source: Hong Kong Observatory_
+Source: Hong Kong Observatory
 ```
 
 ---
