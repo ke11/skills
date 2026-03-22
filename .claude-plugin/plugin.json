@@ -1,8 +1,8 @@
 {
-  "name": "ke11-skills",
+  "name": "hk-skills",
   "version": "1.0.0",
-  "description": "Hong Kong-based AI agent skills. Ask questions in English or Cantonese, get real-time data. Currently: HK weather with natural language support.",
-  "author": { "name": "ke11" },
+  "description": "Real-time Hong Kong weather data from HK Observatory. Supports English, Traditional & Simplified Chinese with natural language queries.",
+  "author": { "name": "ke11", "url": "https://github.com/ke11" },
   "homepage": "https://github.com/ke11/skills",
   "repository": "https://github.com/ke11/skills",
   "license": "MIT",
