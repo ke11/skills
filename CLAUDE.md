@@ -97,7 +97,7 @@ wait
 
 Skills are distributed via [skills.sh](https://skills.sh). Installation:
 ```bash
-npx skills add opentail/skills --skill <skill-name>
+npx skills add ke11/skills --skill <skill-name>
 ```
 
 The plugin.json metadata (name, version, description, homepage, repository, keywords) is used by the skills.sh registry.
@@ -106,4 +106,4 @@ The plugin.json metadata (name, version, description, homepage, repository, keyw
 
 | Skill | Description |
 |-------|-------------|
-| `weather` | Hong Kong Observatory real-time weather data |
+| `hk-weather` | Hong Kong Observatory real-time weather data |
