@@ -1,5 +1,5 @@
 ---
-name: weather
+name: hk-weather
 description: "Query HK Observatory for real-time weather. Current conditions, 9-day forecast, warnings, and hourly rainfall."
 allowed-tools: [Bash]
 disable-model-invocation: true
@@ -12,7 +12,7 @@ Fetch live Hong Kong weather data from HKO Open Data API for: $ARGUMENTS
 
 Split `$ARGUMENTS` by spaces into tokens. Separate into **keywords** and **language**:
 
-- **Language tokens**: `en`, `tc`, `sc` — if found, use as `lang` parameter. Default: `tc`
+- **Language tokens**: `en` (English), `tc` (Traditional Chinese, default), `sc` (Simplified Chinese) — if found, use as `lang` parameter. Default: `tc`
 - **Keywords** (case-insensitive):
   - `detail` → detailed mode (all stations + forecast)
   - `stations` → all station readings only

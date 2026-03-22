@@ -1,11 +1,11 @@
 {
-  "name": "opentail-skills",
+  "name": "ke11-skills",
   "version": "1.0.0",
-  "description": "Skills for Claude Code and other AI agents by opentail",
-  "author": { "name": "opentail" },
-  "homepage": "https://github.com/opentail/skills",
-  "repository": "https://github.com/opentail/skills",
+  "description": "Hong Kong-based AI agent skills. Ask questions in English or Cantonese, get real-time data. Currently: HK weather with natural language support.",
+  "author": { "name": "ke11" },
+  "homepage": "https://github.com/ke11/skills",
+  "repository": "https://github.com/ke11/skills",
   "license": "MIT",
-  "keywords": ["weather", "hong-kong", "hko"],
+  "keywords": ["skills", "weather", "hong-kong", "hko", "ai-agents", "claude-code"],
   "skills": ["./skills/"]
 }
