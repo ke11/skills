@@ -1,25 +1,34 @@
-# opentail/skills — AI Agent Skills
+# ke11/skills — Hong Kong AI Agent Skills
 
 [繁體中文](README.md) | English
 
-A collection of skills for [Claude Code](https://docs.anthropic.com/en/docs/claude-code) and other AI agents.
+> **Beta** — This project is in casual active development. Skills, APIs, and configuration formats may change without notice. We welcome feedback and contributions.
+
+AI agent skills designed for Hong Kong.
+
+---
 
 ## Installation
 
 ```bash
-npx skills add opentail/skills --skill weather
+npx skills add ke11/skills --skill hk-weather
 ```
 
-## Available Skills
+---
+
+## Skills
 
 ### weather — Hong Kong Weather
 
 Fetches real-time weather data from the [Hong Kong Observatory Open Data API](https://data.weather.gov.hk/weatherAPI/doc/HKO_Open_Data_API_Documentation.pdf). No API key required.
 
+#### Usage
+
+**Keyword Commands** (Precise Mode) — Use specific keywords to get targeted data:
+
 | Command | Data | APIs | Speed |
 |---------|------|------|-------|
 | `/hk-weather` | Weather summary | 1 | Fast |
-| `/hk-weather will it rain?` | Rain status + probability + forecast | 3 | Medium |
 | `/hk-weather stations` | Station temps, humidity, rainfall | 1 | Fast |
 | `/hk-weather forecast` | 9-day forecast | 1 | Fast |
 | `/hk-weather rainfall` | Hourly rainfall | 1 | Fast |
@@ -27,11 +36,7 @@ Fetches real-time weather data from the [Hong Kong Observatory Open Data API](ht
 | `/hk-weather detail` | All stations + forecast | 2 | Medium |
 | `/hk-weather all` | Everything | 6 | Slow |
 
-Append a language code to switch language: `en` (English), `tc` (Traditional Chinese, default), `sc` (Simplified Chinese)
-
-#### Natural Language Questions
-
-The skill supports natural language questions in both English and Traditional/Simplified Chinese — no need to memorize keywords:
+**Natural Language Questions** (Relaxed Mode) — No need to memorize keywords, just ask in English:
 
 | Example question | Function |
 |---|---|
@@ -44,9 +49,14 @@ The skill supports natural language questions in both English and Traditional/Si
 | `/hk-weather is it humid?` | Station humidity |
 | `/hk-weather UV index?` | UV index |
 | `/hk-weather weather next week?` | 9-day forecast |
-| `/hk-weather 今日會唔會落雨？` | Rain query |
-| `/hk-weather 掛幾號風球？` | Typhoon / warnings |
-| `/hk-weather 幾度？` | Station temperatures |
+
+**Language Codes** — Append a language code to the end of any command to switch output language:
+
+| Code | Language | Example |
+|------|----------|---------|
+| `en` | English | `/hk-weather forecast en` |
+| `tc` | Traditional Chinese (default) | `/hk-weather forecast tc` |
+| `sc` | Simplified Chinese | `/hk-weather forecast sc` |
 
 #### Example Output
 
@@ -63,6 +73,8 @@ The skill supports natural language questions in both English and Traditional/Si
 
 _Source: Hong Kong Observatory_
 ```
+
+---
 
 ## License
 
