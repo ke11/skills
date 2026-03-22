@@ -1,0 +1,11 @@
+{
+  "name": "opentail-skills",
+  "version": "1.0.0",
+  "description": "Skills for Claude Code and other AI agents by opentail",
+  "author": { "name": "opentail" },
+  "homepage": "https://github.com/opentail/skills",
+  "repository": "https://github.com/opentail/skills",
+  "license": "MIT",
+  "keywords": ["weather", "hong-kong", "hko"],
+  "skills": ["./skills/"]
+}
