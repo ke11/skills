@@ -76,6 +76,10 @@ npx skills add ke11/skills --skill hk-weather
 
 ---
 
+## Privacy
+
+本插件不收集、儲存或傳輸任何用戶數據。所有請求均直接發送至[香港天文台公開數據 API](https://data.weather.gov.hk)，僅使用 HTTP GET 請求，無需 API 金鑰或身份驗證。
+
 ## License
 
 MIT

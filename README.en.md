@@ -76,6 +76,10 @@ Source: Hong Kong Observatory
 
 ---
 
+## Privacy
+
+This plugin does not collect, store, or transmit any user data. All requests are made directly to the [Hong Kong Observatory Open Data API](https://data.weather.gov.hk) using HTTP GET requests only. No API keys or authentication required.
+
 ## License
 
 MIT
