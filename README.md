@@ -1,4 +1,4 @@
-# ke11/skills — Hong Kong AI 代理技能集
+# 香港 AI 代理技能
 
 繁體中文 | [English](README.en.md)
 

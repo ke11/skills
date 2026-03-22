@@ -1,4 +1,4 @@
-# ke11/skills — Hong Kong AI Agent Skills
+# Hong Kong AI Agent Skills
 
 [繁體中文](README.md) | English
 
