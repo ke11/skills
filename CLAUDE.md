@@ -107,3 +107,28 @@ The plugin.json metadata (name, version, description, homepage, repository, keyw
 | Skill | Description |
 |-------|-------------|
 | `hk-weather` | Hong Kong Observatory real-time weather data |
+| `kmb-eta` | KMB/LWB real-time bus ETA |
+
+## API Endpoints Reference
+
+### KMB/LWB Open Data API
+
+Base URL: `https://data.etabus.gov.hk/v1/transport/kmb`
+
+| Endpoint | Description | Used by |
+|----------|-------------|---------|
+| `GET /route/{route}/{direction}/1` | Route info (orig/dest names) | `kmb-eta` |
+| `GET /route-stop/{route}/{direction}/1` | Stop sequence for a route | `kmb-eta` |
+| `GET /stop` | All stops (bulk, ~4000+ stops) | `kmb-eta` (cached) |
+| `GET /stop/{stop_id}` | Individual stop detail | — |
+| `GET /eta/{stop_id}/{route}/1` | Real-time ETA | `kmb-eta` |
+
+- `{direction}`: `outbound` or `inbound`
+- All endpoints return JSON with `{ "type", "version", "generated_timestamp", "data" }` structure
+- No API key required, read-only GET requests only
+
+### Hong Kong Observatory Open Data API
+
+Base URL: `https://data.weather.gov.hk/weatherAPI/opendata`
+
+See `skills/weather/SKILL.md` for full endpoint list.

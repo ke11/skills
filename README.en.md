@@ -78,24 +78,24 @@ Source: Hong Kong Observatory
 
 ### kmb-eta — KMB/LWB Bus ETA
 
-Fetches real-time bus arrival times from the [KMB Open Data API](https://data.etabus.gov.hk). Supports GPS auto-detection of the nearest bus stop. No API key required.
+Fetches real-time bus arrival times from the [KMB Open Data API](https://data.etabus.gov.hk). No API key required.
 
 #### Usage
 
 ```
-/kmb-eta <route> [bus stop] [I|O] [en|tc|sc]
+/kmb-eta <route> <stop name> [terminal name] [en|tc|sc]
 ```
 
 | Command | Description |
 |---------|-------------|
-| `/kmb-eta 42C` | Auto-detect nearest stop, query route 42C ETA |
-| `/kmb-eta 42C 長亨 O` | Query 42C outbound at Cheung Hang stop |
+| `/kmb-eta 42C 業成街 藍田` | Query ETA at Yip Shing Street, heading to Lam Tin |
+| `/kmb-eta 42C 業成街` | Search both directions for Yip Shing Street |
 | `/kmb-eta 42C stops` | List all stops on route 42C (find stop names) |
-| `/kmb-eta 960 建生 I en` | Query 960 inbound at Kin Sang (English output) |
+| `/kmb-eta 960 建生 en` | Query 960 at Kin Sang (English output) |
 
-- **Auto-location mode**: Only route number required — uses macOS GPS to find the nearest stop and direction automatically
-- **Manual mode**: Provide route + stop keyword + direction (I=inbound / O=outbound)
+- **Terminal name**: Specify direction using terminal name (e.g. "藍田" = heading to Lam Tin). Omit to search both directions.
 - **Languages**: `tc` Traditional Chinese (default), `en` English, `sc` Simplified Chinese
+- **Offline data**: Route and stop data ships with the skill; only ETA requires a live API call. Update data: `npx skills update`
 
 #### Example Output
 
@@ -103,8 +103,7 @@ Fetches real-time bus arrival times from the [KMB Open Data API](https://data.et
 ● Bus ETA — Route 42C
 
 Route: TSING YI (CHEUNG HANG ESTATE) → LAM TIN STATION
-Stop: CHEUNG HANG BUS TERMINUS (Stop #1)
-Distance: ~120m (nearest stop)
+Stop: YIP SHING STREET (Stop #18)
 
 | # | ETA   | Remaining | Remark        |
 |---|-------|-----------|---------------|
@@ -113,14 +112,16 @@ Distance: ~120m (nearest stop)
 | 3 | 17:07 | 16 min    |               |
 
 Updated: 2026-03-23 16:49 HKT
-Source: KMB/LWB
+Source: DATA.GOV.HK / KMB
 ```
 
 ---
 
 ## Privacy
 
-This plugin does not collect, store, or transmit any user data. All requests are made directly to the [Hong Kong Observatory Open Data API](https://data.weather.gov.hk) and the [KMB Open Data API](https://data.etabus.gov.hk) using HTTP GET requests only. No API keys or authentication required. The auto-location feature uses macOS CoreLocation — location data is processed locally and never sent to any server.
+This plugin does not collect, store, or transmit any user data. Real-time ETA is fetched from the [KMB Open Data API](https://data.etabus.gov.hk), weather data from the [Hong Kong Observatory Open Data API](https://data.weather.gov.hk), using HTTP GET requests only. No API keys or authentication required.
+
+Bus route and stop data sourced from [DATA.GOV.HK](https://data.gov.hk), provided by The Kowloon Motor Bus Co. (1933) Ltd., used under the [DATA.GOV.HK Terms and Conditions](https://data.gov.hk/en/terms-and-conditions).
 
 ## License
 

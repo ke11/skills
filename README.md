@@ -78,24 +78,24 @@ npx skills add ke11/skills --skill hk-weather
 
 ### kmb-eta — 九巴/龍運到站時間
 
-從[九巴開放數據 API](https://data.etabus.gov.hk) 獲取即時巴士到站時間。支援 GPS 自動定位最近車站。無需 API 金鑰。
+從[九巴開放數據 API](https://data.etabus.gov.hk) 獲取即時巴士到站時間。無需 API 金鑰。
 
 #### Usage
 
 ```
-/kmb-eta <路線> [車站] [I|O] [en|tc|sc]
+/kmb-eta <路線> <車站名> [總站名] [en|tc|sc]
 ```
 
 | 指令 | 說明 |
 |------|------|
-| `/kmb-eta 42C` | 自動定位最近車站，查詢 42C 到站時間 |
-| `/kmb-eta 42C 長亨 O` | 查詢 42C 出站方向長亨站到站時間 |
+| `/kmb-eta 42C 業成街 藍田` | 查詢往藍田方向的業成街站到站時間 |
+| `/kmb-eta 42C 業成街` | 搜尋兩個方向的業成街站 |
 | `/kmb-eta 42C stops` | 列出 42C 所有車站（查找車站名稱用） |
-| `/kmb-eta 960 建生 I en` | 查詢 960 入站方向建生站（英文輸出） |
+| `/kmb-eta 960 建生 en` | 查詢 960 建生站（英文輸出） |
 
-- **自動定位模式**：僅需提供路線編號，透過 macOS GPS 定位自動找出最近車站及方向
-- **手動模式**：提供路線 + 車站關鍵字 + 方向 (I=入站 / O=出站)
+- **總站名**：用總站名指定方向（如「藍田」即往藍田方向），省略則搜尋兩個方向
 - **語言**：`tc` 繁體中文（預設）、`en` English、`sc` 簡體中文
+- **離線資料**：路線及車站資料隨技能安裝，僅到站時間需即時查詢。更新資料：`npx skills update`
 
 #### Example Output
 
@@ -103,8 +103,7 @@ npx skills add ke11/skills --skill hk-weather
 ● 巴士到站時間 — 42C
 
 路線: 青衣(長亨邨) → 藍田站
-車站: 長亨巴士總站 (第1站)
-距離: 約 120m（最近車站）
+車站: 業成街 (第18站)
 
 | # | 預計到達 | 剩餘時間 | 備註     |
 |---|---------|---------|----------|
@@ -113,14 +112,16 @@ npx skills add ke11/skills --skill hk-weather
 | 3 | 17:07   | 16 分鐘 |          |
 
 更新時間: 2026-03-23 16:49 HKT
-資料來源：九巴/龍運
+資料來源：DATA.GOV.HK / 九巴
 ```
 
 ---
 
 ## Privacy
 
-本插件不收集、儲存或傳輸任何用戶數據。所有請求均直接發送至[香港天文台公開數據 API](https://data.weather.gov.hk) 及[九巴開放數據 API](https://data.etabus.gov.hk)，僅使用 HTTP GET 請求，無需 API 金鑰或身份驗證。自動定位功能使用 macOS CoreLocation，位置資料僅在本機處理，不會傳送至任何伺服器。
+本插件不收集、儲存或傳輸任何用戶數據。即時到站時間直接從[九巴開放數據 API](https://data.etabus.gov.hk) 查詢，天氣資料從[香港天文台公開數據 API](https://data.weather.gov.hk) 查詢，僅使用 HTTP GET 請求，無需 API 金鑰或身份驗證。
+
+巴士路線及車站資料來源於 [DATA.GOV.HK](https://data.gov.hk)，由九龍巴士（一九三三）有限公司提供，依據[資料一線通使用條款](https://data.gov.hk/tc/terms-and-conditions)使用。
 
 ## License
 
