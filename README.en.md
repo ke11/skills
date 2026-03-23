@@ -10,11 +10,13 @@ AI agent skills designed for Hong Kong.
 
 ## Installation
 
+Install [Weather skill](#weather--hong-kong-weather):
 ```bash
-// Install weather skill (#weather--hong-kong-weather)
 npx skills add ke11/skills --skill hk-weather
+```
 
-// Install bus ETA skill (#kmb-eta--kmblwb-bus-eta)
+Install [Bus ETA skill](#kmb-eta--kmb-bus-eta):
+```bash
 npx skills add ke11/skills --skill kmb-eta
 ```
 

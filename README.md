@@ -10,11 +10,13 @@
 
 ## Installation
 
+安裝 [天氣技能](#weather--香港天氣)：
 ```bash
-// 安裝天氣技能 (#weather--香港天氣)
 npx skills add ke11/skills --skill hk-weather
+```
 
-// 安裝巴士到站時間技能 (#kmb-eta--九巴到站時間)
+安裝 [九巴到站技能](#kmb-eta--九巴到站時間)：
+```bash
 npx skills add ke11/skills --skill kmb-eta
 ```
 
