@@ -8,12 +8,16 @@ A multi-skill monorepo for Claude Code and other AI agents, distributed via [ski
 
 ## Architecture
 
-Each skill is a standalone directory under `skills/` containing a single `SKILL.md` file. There is no executable code—only markdown instructions that Claude interprets at runtime.
+Each skill is a standalone directory under `skills/`. A skill must contain a `SKILL.md` file and may optionally include supporting files (Python scripts, data files, etc.).
 
 ```
 skills/
-  <skill-name>/
-    SKILL.md
+  hk-weather/
+    SKILL.md              # Skill instructions (required)
+  kmb-eta/
+    SKILL.md              # Skill instructions (required)
+    query.py              # Python query script
+    data.json             # Bundled offline data
 ```
 
 ### Plugin Discovery
@@ -51,6 +55,8 @@ Step-by-step guidance on how to implement the skill...
 - `allowed-tools`: Array of tool names the skill is allowed to use. Set to an empty array `[]` if the skill contains all logic in instructions
 - `disable-model-invocation`: Set to `true` if Claude should only follow the exact SKILL.md instructions without applying general reasoning
 - `argument-hint`: Guidance for skill invocation syntax (shown in `/help` and skill suggestions)
+- `model`: (optional) Override model for this skill — accepts aliases (`haiku`, `sonnet`, `opus`) or full model IDs
+- `effort`: (optional) Override effort level — `low`, `medium`, or `high`
 
 **Instruction Guidelines:**
 - Use clear step-by-step instructions (Step 1, Step 2, etc.)
@@ -107,3 +113,28 @@ The plugin.json metadata (name, version, description, homepage, repository, keyw
 | Skill | Description |
 |-------|-------------|
 | `hk-weather` | Hong Kong Observatory real-time weather data |
+| `kmb-eta` | KMB real-time bus ETA |
+
+## API Endpoints Reference
+
+### KMB Open Data API
+
+Base URL: `https://data.etabus.gov.hk/v1/transport/kmb`
+
+| Endpoint | Description | Used by |
+|----------|-------------|---------|
+| `GET /route/{route}/{direction}/1` | Route info (orig/dest names) | `kmb-eta` |
+| `GET /route-stop/{route}/{direction}/1` | Stop sequence for a route | `kmb-eta` |
+| `GET /stop` | All stops (bulk, ~6700 stops) | `kmb-eta` (bundled in data.json) |
+| `GET /stop/{stop_id}` | Individual stop detail | — |
+| `GET /eta/{stop_id}/{route}/1` | Real-time ETA | `kmb-eta` |
+
+- `{direction}`: `outbound` or `inbound`
+- All endpoints return JSON with `{ "type", "version", "generated_timestamp", "data" }` structure
+- No API key required, read-only GET requests only
+
+### Hong Kong Observatory Open Data API
+
+Base URL: `https://data.weather.gov.hk/weatherAPI/opendata`
+
+See `skills/weather/SKILL.md` for full endpoint list.

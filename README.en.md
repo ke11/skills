@@ -10,8 +10,14 @@ AI agent skills designed for Hong Kong.
 
 ## Installation
 
+Install [Weather skill](#weather--hong-kong-weather):
 ```bash
 npx skills add ke11/skills --skill hk-weather
+```
+
+Install [Bus ETA skill](#kmb-eta--kmb-bus-eta):
+```bash
+npx skills add ke11/skills --skill kmb-eta
 ```
 
 ---
@@ -76,9 +82,52 @@ Source: Hong Kong Observatory
 
 ---
 
+### kmb-eta — KMB Bus ETA
+
+Fetches real-time bus arrival times from the [KMB Open Data API](https://data.etabus.gov.hk). No API key required.
+
+#### Usage
+
+```
+/kmb-eta <route> <stop name> [terminal name] [en|tc]
+```
+
+| Command | Description |
+|---------|-------------|
+| `/kmb-eta 42C 業成街 藍田` | Query ETA at Yip Shing Street, heading to Lam Tin |
+| `/kmb-eta 42C 業成街` | Search both directions for Yip Shing Street |
+| `/kmb-eta 42C stops` | List all stops on route 42C (find stop names) |
+| `/kmb-eta 960 建生 en` | Query 960 at Kin Sang (English output) |
+
+- **Terminal name**: Specify direction using terminal name (e.g. "藍田" = heading to Lam Tin). Omit to search both directions.
+- **Languages**: `tc` Traditional Chinese (default), `en` English
+- **Offline data**: Route and stop data ships with the skill; only ETA requires a live API call. Update data: `npx skills update`
+
+#### Example Output
+
+```
+## Bus ETA — Route 42C
+
+Route: TSING YI (CHEUNG HANG ESTATE) → LAM TIN STATION
+Stop: YIP SHING STREET KWAI CHUNG (Stop #15)
+
+| # | ETA   | Remaining | Remark        |
+|---|-------|-----------|---------------|
+| 1 | 16:54 | 3 min     | Scheduled Bus |
+| 2 | 17:00 | 9 min     |               |
+| 3 | 17:07 | 16 min    |               |
+
+Updated: 2026-03-23 16:49 HKT
+Source: DATA.GOV.HK / KMB
+```
+
+---
+
 ## Privacy
 
-This plugin does not collect, store, or transmit any user data. All requests are made directly to the [Hong Kong Observatory Open Data API](https://data.weather.gov.hk) using HTTP GET requests only. No API keys or authentication required.
+This plugin does not collect, store, or transmit any user data. Real-time ETA is fetched from the [KMB Open Data API](https://data.etabus.gov.hk), weather data from the [Hong Kong Observatory Open Data API](https://data.weather.gov.hk), using HTTP GET requests only. No API keys or authentication required.
+
+Bus route and stop data sourced from [DATA.GOV.HK](https://data.gov.hk), provided by The Kowloon Motor Bus Co. (1933) Ltd., used under the [DATA.GOV.HK Terms and Conditions](https://data.gov.hk/en/terms-and-conditions).
 
 ## License
 

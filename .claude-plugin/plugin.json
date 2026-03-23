@@ -1,11 +1,11 @@
 {
   "name": "hk-skills",
   "version": "1.0.0",
-  "description": "Real-time Hong Kong weather data from HK Observatory. Supports English, Traditional & Simplified Chinese with natural language queries.",
+  "description": "Hong Kong real-time data skills: HK Observatory weather and KMB/LWB bus ETA with GPS auto-location.",
   "author": { "name": "ke11", "url": "https://github.com/ke11" },
   "homepage": "https://github.com/ke11/skills",
   "repository": "https://github.com/ke11/skills",
   "license": "MIT",
-  "keywords": ["skills", "weather", "hong-kong", "hko", "ai-agents", "claude-code"],
+  "keywords": ["skills", "weather", "hong-kong", "hko", "kmb", "bus", "eta", "ai-agents", "claude-code"],
   "skills": ["./skills/"]
 }

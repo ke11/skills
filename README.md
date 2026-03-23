@@ -10,8 +10,14 @@
 
 ## Installation
 
+安裝 [天氣技能](#weather--香港天氣)：
 ```bash
 npx skills add ke11/skills --skill hk-weather
+```
+
+安裝 [九巴到站技能](#kmb-eta--九巴到站時間)：
+```bash
+npx skills add ke11/skills --skill kmb-eta
 ```
 
 ---
@@ -76,9 +82,52 @@ npx skills add ke11/skills --skill hk-weather
 
 ---
 
+### kmb-eta — 九巴到站時間
+
+從[九巴開放數據 API](https://data.etabus.gov.hk) 獲取即時巴士到站時間。無需 API 金鑰。
+
+#### Usage
+
+```
+/kmb-eta <路線> <車站名> [總站名] [en|tc]
+```
+
+| 指令 | 說明 |
+|------|------|
+| `/kmb-eta 42C 業成街 藍田` | 查詢往藍田方向的業成街站到站時間 |
+| `/kmb-eta 42C 業成街` | 搜尋兩個方向的業成街站 |
+| `/kmb-eta 42C stops` | 列出 42C 所有車站（查找車站名稱用） |
+| `/kmb-eta 960 建生 en` | 查詢 960 建生站（英文輸出） |
+
+- **總站名**：用總站名指定方向（如「藍田」即往藍田方向），省略則搜尋兩個方向
+- **語言**：`tc` 繁體中文（預設）、`en` English
+- **離線資料**：路線及車站資料隨技能安裝，僅到站時間需即時查詢。更新資料：`npx skills update`
+
+#### Example Output
+
+```
+## 巴士到站時間 — 42C
+
+路線: 青衣(長亨邨) → 藍田站
+車站: 葵涌業成街 (第15站)
+
+| # | 預計到達 | 剩餘時間 | 備註     |
+|---|---------|---------|----------|
+| 1 | 16:54   | 3 分鐘  | 原定班次  |
+| 2 | 17:00   | 9 分鐘  |          |
+| 3 | 17:07   | 16 分鐘 |          |
+
+更新時間: 2026-03-23 16:49 HKT
+資料來源：DATA.GOV.HK / 九巴
+```
+
+---
+
 ## Privacy
 
-本插件不收集、儲存或傳輸任何用戶數據。所有請求均直接發送至[香港天文台公開數據 API](https://data.weather.gov.hk)，僅使用 HTTP GET 請求，無需 API 金鑰或身份驗證。
+本插件不收集、儲存或傳輸任何用戶數據。即時到站時間直接從[九巴開放數據 API](https://data.etabus.gov.hk) 查詢，天氣資料從[香港天文台公開數據 API](https://data.weather.gov.hk) 查詢，僅使用 HTTP GET 請求，無需 API 金鑰或身份驗證。
+
+巴士路線及車站資料來源於 [DATA.GOV.HK](https://data.gov.hk)，由九龍巴士（一九三三）有限公司提供，依據[資料一線通使用條款](https://data.gov.hk/tc/terms-and-conditions)使用。
 
 ## License
 
