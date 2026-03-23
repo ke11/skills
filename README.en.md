@@ -76,9 +76,51 @@ Source: Hong Kong Observatory
 
 ---
 
+### kmb-eta — KMB/LWB Bus ETA
+
+Fetches real-time bus arrival times from the [KMB Open Data API](https://data.etabus.gov.hk). Supports GPS auto-detection of the nearest bus stop. No API key required.
+
+#### Usage
+
+```
+/kmb-eta <route> [bus stop] [I|O] [en|tc|sc]
+```
+
+| Command | Description |
+|---------|-------------|
+| `/kmb-eta 42C` | Auto-detect nearest stop, query route 42C ETA |
+| `/kmb-eta 42C 長亨 O` | Query 42C outbound at Cheung Hang stop |
+| `/kmb-eta 42C stops` | List all stops on route 42C (find stop names) |
+| `/kmb-eta 960 建生 I en` | Query 960 inbound at Kin Sang (English output) |
+
+- **Auto-location mode**: Only route number required — uses macOS GPS to find the nearest stop and direction automatically
+- **Manual mode**: Provide route + stop keyword + direction (I=inbound / O=outbound)
+- **Languages**: `tc` Traditional Chinese (default), `en` English, `sc` Simplified Chinese
+
+#### Example Output
+
+```
+● Bus ETA — Route 42C
+
+Route: TSING YI (CHEUNG HANG ESTATE) → LAM TIN STATION
+Stop: CHEUNG HANG BUS TERMINUS (Stop #1)
+Distance: ~120m (nearest stop)
+
+| # | ETA   | Remaining | Remark        |
+|---|-------|-----------|---------------|
+| 1 | 16:54 | 3 min     | Scheduled Bus |
+| 2 | 17:00 | 9 min     |               |
+| 3 | 17:07 | 16 min    |               |
+
+Updated: 2026-03-23 16:49 HKT
+Source: KMB/LWB
+```
+
+---
+
 ## Privacy
 
-This plugin does not collect, store, or transmit any user data. All requests are made directly to the [Hong Kong Observatory Open Data API](https://data.weather.gov.hk) using HTTP GET requests only. No API keys or authentication required.
+This plugin does not collect, store, or transmit any user data. All requests are made directly to the [Hong Kong Observatory Open Data API](https://data.weather.gov.hk) and the [KMB Open Data API](https://data.etabus.gov.hk) using HTTP GET requests only. No API keys or authentication required. The auto-location feature uses macOS CoreLocation — location data is processed locally and never sent to any server.
 
 ## License
 
