@@ -1,6 +1,6 @@
 ---
 name: kmb-eta
-description: "Query KMB/LWB real-time bus arrival time."
+description: "Query KMB real-time bus arrival time."
 allowed-tools: [Bash]
 effort: low
 argument-hint: "<路線> <車站名> [總站名] [en|tc]"

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""KMB/LWB bus ETA query. Reads static data from data.json, fetches only live ETA.
+"""KMB bus ETA query. Reads static data from data.json, fetches only live ETA.
 
 Usage: python3 query.py <route> [stop] [terminal] [en|tc] [stops]
 """

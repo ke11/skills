@@ -11,7 +11,11 @@ AI agent skills designed for Hong Kong.
 ## Installation
 
 ```bash
+// Install weather skill (#weather--hong-kong-weather)
 npx skills add ke11/skills --skill hk-weather
+
+// Install bus ETA skill (#kmb-eta--kmblwb-bus-eta)
+npx skills add ke11/skills --skill kmb-eta
 ```
 
 ---
@@ -76,14 +80,14 @@ Source: Hong Kong Observatory
 
 ---
 
-### kmb-eta — KMB/LWB Bus ETA
+### kmb-eta — KMB Bus ETA
 
 Fetches real-time bus arrival times from the [KMB Open Data API](https://data.etabus.gov.hk). No API key required.
 
 #### Usage
 
 ```
-/kmb-eta <route> <stop name> [terminal name] [en|tc|sc]
+/kmb-eta <route> <stop name> [terminal name] [en|tc]
 ```
 
 | Command | Description |
@@ -94,16 +98,16 @@ Fetches real-time bus arrival times from the [KMB Open Data API](https://data.et
 | `/kmb-eta 960 建生 en` | Query 960 at Kin Sang (English output) |
 
 - **Terminal name**: Specify direction using terminal name (e.g. "藍田" = heading to Lam Tin). Omit to search both directions.
-- **Languages**: `tc` Traditional Chinese (default), `en` English, `sc` Simplified Chinese
+- **Languages**: `tc` Traditional Chinese (default), `en` English
 - **Offline data**: Route and stop data ships with the skill; only ETA requires a live API call. Update data: `npx skills update`
 
 #### Example Output
 
 ```
-● Bus ETA — Route 42C
+## Bus ETA — Route 42C
 
 Route: TSING YI (CHEUNG HANG ESTATE) → LAM TIN STATION
-Stop: YIP SHING STREET (Stop #18)
+Stop: YIP SHING STREET KWAI CHUNG (Stop #15)
 
 | # | ETA   | Remaining | Remark        |
 |---|-------|-----------|---------------|

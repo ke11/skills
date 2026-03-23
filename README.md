@@ -11,7 +11,11 @@
 ## Installation
 
 ```bash
+// 安裝天氣技能 (#weather--香港天氣)
 npx skills add ke11/skills --skill hk-weather
+
+// 安裝巴士到站時間技能 (#kmb-eta--九巴到站時間)
+npx skills add ke11/skills --skill kmb-eta
 ```
 
 ---
@@ -76,14 +80,14 @@ npx skills add ke11/skills --skill hk-weather
 
 ---
 
-### kmb-eta — 九巴/龍運到站時間
+### kmb-eta — 九巴到站時間
 
 從[九巴開放數據 API](https://data.etabus.gov.hk) 獲取即時巴士到站時間。無需 API 金鑰。
 
 #### Usage
 
 ```
-/kmb-eta <路線> <車站名> [總站名] [en|tc|sc]
+/kmb-eta <路線> <車站名> [總站名] [en|tc]
 ```
 
 | 指令 | 說明 |
@@ -94,16 +98,16 @@ npx skills add ke11/skills --skill hk-weather
 | `/kmb-eta 960 建生 en` | 查詢 960 建生站（英文輸出） |
 
 - **總站名**：用總站名指定方向（如「藍田」即往藍田方向），省略則搜尋兩個方向
-- **語言**：`tc` 繁體中文（預設）、`en` English、`sc` 簡體中文
+- **語言**：`tc` 繁體中文（預設）、`en` English
 - **離線資料**：路線及車站資料隨技能安裝，僅到站時間需即時查詢。更新資料：`npx skills update`
 
 #### Example Output
 
 ```
-● 巴士到站時間 — 42C
+## 巴士到站時間 — 42C
 
 路線: 青衣(長亨邨) → 藍田站
-車站: 業成街 (第18站)
+車站: 葵涌業成街 (第15站)
 
 | # | 預計到達 | 剩餘時間 | 備註     |
 |---|---------|---------|----------|
