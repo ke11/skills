@@ -23,6 +23,13 @@ skills/
       run.sh              # Shell wrapper (path resolution)
       query.py            # Python query script
       data.json           # Bundled offline data
+  hk-aed-wait/
+    SKILL.md              # Skill instructions (required)
+    scripts/
+      run.sh              # Shell wrapper (path resolution)
+      query.py            # Python query script
+    references/
+      api.md              # API documentation
 ```
 
 ### Plugin Discovery
@@ -119,6 +126,7 @@ The plugin.json metadata (name, version, description, homepage, repository, keyw
 |-------|-------------|
 | `hk-weather` | Hong Kong Observatory real-time weather data |
 | `hk-kmb-eta` | KMB real-time bus ETA |
+| `hk-aed-wait` | Hospital A&E real-time waiting times |
 
 ## API Endpoints Reference
 
@@ -143,3 +151,16 @@ Base URL: `https://data.etabus.gov.hk/v1/transport/kmb`
 Base URL: `https://data.weather.gov.hk/weatherAPI/opendata`
 
 See `skills/hk-weather/scripts/query.py` for full endpoint list.
+
+### Hospital Authority A&E Waiting Time API
+
+| Endpoint | Description | Used by |
+|----------|-------------|---------|
+| `GET /opendata/aed/aedwtdata2-en.json` | A&E waiting times (English) | `hk-aed-wait` |
+| `GET /opendata/aed/aedwtdata2-tc.json` | A&E waiting times (繁體中文) | `hk-aed-wait` |
+| `GET /opendata/aed/aedwtdata2-sc.json` | A&E waiting times (简体中文) | `hk-aed-wait` |
+
+- Base URL: `https://www.ha.org.hk`
+- Updates every ~15 minutes, covers 18 public hospitals
+- No API key required
+- See `skills/hk-aed-wait/references/api.md` for full data dictionary
