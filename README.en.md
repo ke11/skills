@@ -2,78 +2,72 @@
 
 [繁體中文](README.md) | English
 
-> **Beta** — This project is in casual active development. Skills, APIs, and configuration formats may change without notice. We welcome feedback and contributions.
+> **Beta** — This project is in active development. Skills, APIs, and configuration formats may change without notice. Feedback and contributions welcome.
 
-AI agent skills designed for Hong Kong.
+AI agent skills designed for Hong Kong. All data from public APIs, no keys required.
 
----
+## Quick Install
 
-## Installation
-
-Install [Weather skill](#weather--hong-kong-weather):
 ```bash
 npx skills add ke11/skills --skill hk-weather
-```
-
-Install [Bus ETA skill](#kmb-eta--kmb-bus-eta):
-```bash
-npx skills add ke11/skills --skill kmb-eta
+npx skills add ke11/skills --skill hk-kmb-eta
 ```
 
 ---
 
-## Skills
+## Skills Overview
 
-### weather — Hong Kong Weather
+| Skill | Function | Data Source |
+|-------|----------|-------------|
+| [hk-weather](#hk-weather) | Real-time weather, forecasts, warnings, rainfall | [HK Observatory](https://data.weather.gov.hk) |
+| [hk-kmb-eta](#hk-kmb-eta) | Bus arrival times, route lookup | [KMB Open Data](https://data.etabus.gov.hk) |
 
-Fetches real-time weather data from the [Hong Kong Observatory Open Data API](https://data.weather.gov.hk/weatherAPI/doc/HKO_Open_Data_API_Documentation.pdf). No API key required.
+---
 
-#### Usage
+## hk-weather
 
-**Keyword Commands** (Precise Mode) — Use specific keywords to get targeted data:
+Hong Kong Weather
 
-| Command | Data | APIs | Speed |
-|---------|------|------|-------|
-| `/hk-weather` | Weather summary | 1 | Fast |
-| `/hk-weather stations` | Station temps, humidity, rainfall | 1 | Fast |
-| `/hk-weather forecast` | 9-day forecast | 1 | Fast |
-| `/hk-weather rainfall` | Hourly rainfall | 1 | Fast |
-| `/hk-weather warning` | Active warnings | 2 | Medium |
-| `/hk-weather detail` | All stations + forecast | 2 | Medium |
-| `/hk-weather all` | Everything | 6 | Slow |
+Fetches real-time weather data from the Hong Kong Observatory Open Data API.
 
-**Natural Language Questions** (Relaxed Mode) — No need to memorize keywords, just ask in English:
+### Keyword Commands
 
-| Example question | Function |
-|---|---|
+| Command | Data | Speed |
+|---------|------|-------|
+| `/hk-weather` | Weather summary | Fast |
+| `/hk-weather stations` | Station temps, humidity, rainfall | Fast |
+| `/hk-weather forecast` | 9-day forecast | Fast |
+| `/hk-weather rainfall` | Hourly rainfall | Fast |
+| `/hk-weather warning` | Active warnings | Medium |
+| `/hk-weather detail` | All stations + forecast | Medium |
+| `/hk-weather all` | Everything | Slow |
+
+### Natural Language
+
+No need to memorize keywords — just ask in English or Chinese:
+
+| Example | Function |
+|---------|----------|
 | `/hk-weather will it rain today?` | Rain query |
-| `/hk-weather is it raining?` | Rain query |
 | `/hk-weather is there a typhoon?` | Typhoon / warnings |
-| `/hk-weather what signal is up?` | Typhoon / warnings |
-| `/hk-weather any rainstorm warning?` | Weather warnings |
 | `/hk-weather how hot is it?` | Station temperatures |
-| `/hk-weather is it humid?` | Station humidity |
 | `/hk-weather UV index?` | UV index |
 | `/hk-weather weather next week?` | 9-day forecast |
 
-**Language Codes** — Append a language code to the end of any command to switch output language:
+### Language
 
-| Code | Language | Example |
-|------|----------|---------|
-| `en` | English | `/hk-weather forecast en` |
-| `tc` | Traditional Chinese (default) | `/hk-weather forecast tc` |
-| `sc` | Simplified Chinese | `/hk-weather forecast sc` |
+Append a language code: `en` English, `tc` Traditional Chinese (default), `sc` Simplified Chinese.
 
-#### Example Output
+### Example Output
 
 ```
-● Hong Kong Weather Overview
+## Hong Kong Weather Summary
 
 Updated: 2026-03-22 20:45 HKT
 
 Overview: The easterly airstream affecting the coast of Guangdong is gradually moderating.
 
-Forecast (Weather forecast for Hong Kong): Mainly cloudy. Minimum temperature around 21 degrees. Sunny periods during the day with a maximum of around 27 degrees. Light easterly winds.
+Forecast (Weather forecast for Hong Kong): Mainly cloudy. Sunny periods during the day with a maximum of around 27 degrees.
 
 Outlook: Sunny periods in the following few days. Hot during the day from mid to late week.
 
@@ -82,28 +76,30 @@ Source: Hong Kong Observatory
 
 ---
 
-### kmb-eta — KMB Bus ETA
+## hk-kmb-eta
 
-Fetches real-time bus arrival times from the [KMB Open Data API](https://data.etabus.gov.hk). No API key required.
+KMB Bus ETA
 
-#### Usage
+Fetches real-time bus arrival times from the KMB Open Data API.
+
+### Usage
 
 ```
-/kmb-eta <route> <stop name> [terminal name] [en|tc]
+/hk-kmb-eta <route> <stop name> [terminal] [en|tc]
 ```
 
 | Command | Description |
 |---------|-------------|
-| `/kmb-eta 42C 業成街 藍田` | Query ETA at Yip Shing Street, heading to Lam Tin |
-| `/kmb-eta 42C 業成街` | Search both directions for Yip Shing Street |
-| `/kmb-eta 42C stops` | List all stops on route 42C (find stop names) |
-| `/kmb-eta 960 建生 en` | Query 960 at Kin Sang (English output) |
+| `/hk-kmb-eta 42C 業成街 藍田` | ETA at 業成街, heading to 藍田 |
+| `/hk-kmb-eta 42C 業成街` | Search both directions |
+| `/hk-kmb-eta 42C stops` | List all stops on route 42C |
+| `/hk-kmb-eta 960 建生 en` | English output |
 
-- **Terminal name**: Specify direction using terminal name (e.g. "藍田" = heading to Lam Tin). Omit to search both directions.
-- **Languages**: `tc` Traditional Chinese (default), `en` English
-- **Offline data**: Route and stop data ships with the skill; only ETA requires a live API call. Update data: `npx skills update`
+- **Terminal** — Specify direction using terminal name (e.g. "藍田" = heading to Lam Tin). Omit to search both directions.
+- **Language** — `tc` Traditional Chinese (default), `en` English
+- **Offline data** — Route and stop data ships with the skill; only ETA requires a live API call
 
-#### Example Output
+### Example Output
 
 ```
 ## Bus ETA — Route 42C
@@ -125,9 +121,11 @@ Source: DATA.GOV.HK / KMB
 
 ## Privacy
 
-This plugin does not collect, store, or transmit any user data. Real-time ETA is fetched from the [KMB Open Data API](https://data.etabus.gov.hk), weather data from the [Hong Kong Observatory Open Data API](https://data.weather.gov.hk), using HTTP GET requests only. No API keys or authentication required.
+This plugin does not collect, store, or transmit any user data. All data is fetched from public APIs using HTTP GET requests only. No API keys or authentication required.
 
-Bus route and stop data sourced from [DATA.GOV.HK](https://data.gov.hk), provided by The Kowloon Motor Bus Co. (1933) Ltd., used under the [DATA.GOV.HK Terms and Conditions](https://data.gov.hk/en/terms-and-conditions).
+- Weather data: [HK Observatory Open Data API](https://data.weather.gov.hk)
+- Bus ETA: [KMB Open Data API](https://data.etabus.gov.hk)
+- Bus route and stop data sourced from [DATA.GOV.HK](https://data.gov.hk), used under the [DATA.GOV.HK Terms and Conditions](https://data.gov.hk/en/terms-and-conditions)
 
 ## License
 

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Fetch all KMB/LWB static data and save as skills/kmb-eta/data.json.
+"""Fetch all KMB/LWB static data and save as skills/hk-kmb-eta/scripts/data.json.
 
 Data sourced from DATA.GOV.HK (https://data.gov.hk)
 provided by The Kowloon Motor Bus Co. (1933) Ltd.
@@ -10,7 +10,7 @@ import json, urllib.request, sys, os
 from datetime import datetime, timezone, timedelta
 
 BASE = "https://data.etabus.gov.hk/v1/transport/kmb"
-OUT = os.path.join(os.path.dirname(__file__), '..', 'skills', 'kmb-eta', 'data.json')
+OUT = os.path.join(os.path.dirname(__file__), '..', 'skills', 'hk-kmb-eta', 'scripts', 'data.json')
 
 def fetch(url):
     print(f"  Fetching {url} ...", file=sys.stderr)
