@@ -12,6 +12,7 @@ AI agent skills designed for Hong Kong. All data from public APIs, no keys requi
 npx skills add ke11/skills --skill hk-weather
 npx skills add ke11/skills --skill hk-kmb-eta
 npx skills add ke11/skills --skill hk-aed-wait
+npx skills add ke11/skills --skill hk-tcsp-licence
 ```
 
 ---
@@ -23,6 +24,7 @@ npx skills add ke11/skills --skill hk-aed-wait
 | [hk-weather](#hk-weather) | Real-time weather, forecasts, warnings, rainfall | [HK Observatory](https://data.weather.gov.hk) |
 | [hk-kmb-eta](#hk-kmb-eta) | Bus arrival times, route lookup | [KMB Open Data](https://data.etabus.gov.hk) |
 | [hk-aed-wait](#hk-aed-wait) | A&E waiting times | [Hospital Authority](https://www.ha.org.hk/opendata) |
+| [hk-tcsp-licence](#hk-tcsp-licence) | TCSP licensee lookup | [Companies Registry / CSDI](https://portal.csdi.gov.hk) |
 
 ---
 
@@ -165,6 +167,45 @@ Source: Hospital Authority / CSDI
 
 ---
 
+## hk-tcsp-licence
+
+TCSP Licensee Lookup
+
+Search Hong Kong Trust or Company Service Provider (TCSP) licensees via the CSDI Portal. Data sourced from the Companies Registry.
+
+### Usage
+
+```
+/hk-tcsp-licence <field> <keyword> [en|tc]
+```
+
+| Command | Description |
+|---------|-------------|
+| `/hk-tcsp-licence name FULLYEAR` | Search by English name |
+| `/hk-tcsp-licence name 富年` | Search by Chinese name |
+| `/hk-tcsp-licence licence TC000002` | Search by licence number |
+| `/hk-tcsp-licence address wan chai en` | Search by address (English output) |
+
+- **Field** — `name` (English or Chinese name), `licence` (licence number), `address` (business address)
+- **Language** — `tc` Traditional Chinese (default), `en` English
+- Results capped at 20; remarks column shown automatically when applicable
+
+### Example Output
+
+```
+## TCSP Licensee Search Results
+
+Found 1 record(s) matching "FULLYEAR" in name.
+
+| Licence No | English Name | Chinese Name | Business Address |
+|------------|-------------|-------------|------------------|
+| TC000002 | FULLYEAR CONSULTANTS LIMITED | 富年顧問有限公司 | UNIT B, 12/F, KA NIN WAH COMMERCIAL BUILDING, 423-425 HENNESSY ROAD, WAN CHAI, HONG KONG |
+
+Source: Companies Registry / CSDI
+```
+
+---
+
 ## Privacy
 
 This plugin does not collect, store, or transmit any user data. All data is fetched from public APIs using HTTP GET requests only. No API keys or authentication required.
@@ -173,6 +214,7 @@ This plugin does not collect, store, or transmit any user data. All data is fetc
 - Bus ETA: [KMB Open Data API](https://data.etabus.gov.hk)
 - Bus route and stop data sourced from [DATA.GOV.HK](https://data.gov.hk), used under the [DATA.GOV.HK Terms and Conditions](https://data.gov.hk/en/terms-and-conditions)
 - A&E waiting times: [Hospital Authority Open Data](https://www.ha.org.hk/opendata) / [CSDI Portal](https://portal.csdi.gov.hk)
+- TCSP licensee data: [Companies Registry](https://www.cr.gov.hk) / [CSDI Portal](https://portal.csdi.gov.hk)
 
 ## License
 

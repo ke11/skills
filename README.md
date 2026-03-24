@@ -12,6 +12,7 @@
 npx skills add ke11/skills --skill hk-weather
 npx skills add ke11/skills --skill hk-kmb-eta
 npx skills add ke11/skills --skill hk-aed-wait
+npx skills add ke11/skills --skill hk-tcsp-licence
 ```
 
 ---
@@ -23,6 +24,7 @@ npx skills add ke11/skills --skill hk-aed-wait
 | [hk-weather](#hk-weather) | 即時天氣、預報、警告、雨量 | [香港天文台](https://data.weather.gov.hk) |
 | [hk-kmb-eta](#hk-kmb-eta) | 巴士到站時間、路線查詢 | [九巴開放數據](https://data.etabus.gov.hk) |
 | [hk-aed-wait](#hk-aed-wait) | 急症室等候時間 | [醫院管理局](https://www.ha.org.hk/opendata) |
+| [hk-tcsp-licence](#hk-tcsp-licence) | TCSP 持牌人查詢 | [公司註冊處 / CSDI](https://portal.csdi.gov.hk) |
 
 ---
 
@@ -165,6 +167,45 @@ npx skills add ke11/skills --skill hk-aed-wait
 
 ---
 
+## hk-tcsp-licence
+
+TCSP 持牌人查詢
+
+從空間數據共享平台 (CSDI) 查詢香港信託或公司服務持牌人資料，數據來自公司註冊處。
+
+### 用法
+
+```
+/hk-tcsp-licence <欄位> <關鍵字> [en|tc]
+```
+
+| 指令 | 說明 |
+|------|------|
+| `/hk-tcsp-licence name FULLYEAR` | 按英文名稱搜尋 |
+| `/hk-tcsp-licence name 富年` | 按中文名稱搜尋 |
+| `/hk-tcsp-licence licence TC000002` | 按牌照號碼搜尋 |
+| `/hk-tcsp-licence address wan chai en` | 按營業地址搜尋（英文輸出） |
+
+- **欄位** — `name`（英文或中文名稱）、`licence`（牌照號碼）、`address`（營業地址）
+- **語言** — `tc` 繁體中文（預設）、`en` English
+- 結果上限為 20 筆，有備註的記錄會自動顯示備註欄
+
+### 輸出範例
+
+```
+## TCSP 持牌人查詢結果
+
+在名稱中找到 1 筆「富年」的記錄。
+
+| 牌照號碼 | 英文名稱 | 中文名稱 | 營業地址 |
+|----------|---------|---------|---------|
+| TC000002 | FULLYEAR CONSULTANTS LIMITED | 富年顧問有限公司 | UNIT B, 12/F, KA NIN WAH COMMERCIAL BUILDING, 423-425 HENNESSY ROAD, WAN CHAI, HONG KONG |
+
+資料來源：公司註冊處 / 空間數據共享平台 CSDI
+```
+
+---
+
 ## 私隱
 
 本插件不收集、儲存或傳輸任何用戶數據。所有數據僅使用 HTTP GET 請求從公開 API 獲取，無需 API 金鑰或身份驗證。
@@ -173,6 +214,7 @@ npx skills add ke11/skills --skill hk-aed-wait
 - 到站時間：[九巴開放數據 API](https://data.etabus.gov.hk)
 - 巴士路線及車站資料來源於 [DATA.GOV.HK](https://data.gov.hk)，依據[資料一線通使用條款](https://data.gov.hk/tc/terms-and-conditions)使用
 - 急症室等候時間：[醫院管理局開放數據](https://www.ha.org.hk/opendata) / [CSDI 空間數據共享平台](https://portal.csdi.gov.hk)
+- TCSP 持牌人資料：[公司註冊處](https://www.cr.gov.hk) / [CSDI 空間數據共享平台](https://portal.csdi.gov.hk)
 
 ## 授權
 
