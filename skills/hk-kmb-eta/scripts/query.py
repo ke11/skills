@@ -119,12 +119,13 @@ def query_eta(db, route, remaining, lang):
         if rk in db.get('route_stops', {}):
             rs_data[label] = db['route_stops'][rk]
 
-    # Resolve direction: longest suffix match against dest
+    # Resolve direction from trailing tokens, always keeping at least 1 keyword token.
+    # Match backwards so a stop name like "建生" isn't consumed as a dest hint for "建生邨".
     tokens = remaining.split() if remaining.strip() else []
     filter_dir = ''
     kw_tokens = tokens[:]
-    if tokens:
-        for i in range(len(tokens)):
+    if len(tokens) >= 2:
+        for i in range(len(tokens) - 1, 0, -1):
             candidate = ' '.join(tokens[i:]).lower()
             matched = False
             for label, rt in routes.items():
