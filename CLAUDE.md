@@ -127,6 +127,7 @@ The plugin.json metadata (name, version, description, homepage, repository, keyw
 | `hk-weather` | Hong Kong Observatory real-time weather data |
 | `hk-kmb-eta` | KMB real-time bus ETA |
 | `hk-aed-wait` | Hospital A&E real-time waiting times |
+| `hk-tcsp-licence` | TCSP licensee lookup (Companies Registry / CSDI) |
 
 ## API Endpoints Reference
 
@@ -164,3 +165,17 @@ See `skills/hk-weather/scripts/query.py` for full endpoint list.
 - Updates every ~15 minutes, covers 18 public hospitals
 - No API key required
 - See `skills/hk-aed-wait/references/api.md` for full data dictionary
+
+### CSDI Portal — Companies Registry TCSP Dataset
+
+Dataset ID: `cr_rcd_1668395265357_67292`
+
+| Method | Endpoint | Description | Used by |
+|--------|----------|-------------|---------|
+| `POST` | `/server/services/common/cr_rcd_1668395265357_67292/MapServer/WFSServer` | WFS query with OGC XML filter | `hk-tcsp-licence` |
+
+- Base URL: `https://portal.csdi.gov.hk`
+- Uses OGC WFS POST with XML filter (bypasses URL-based WAF that blocks certain GET patterns)
+- Fields: `Licence_No`, `Name_of_TCSP_Licensee_in_English`, `Name_of_TCSP_Licensee_in_Chinese`, `Business_Address`, `Remarks_in_English`, `Remarks_in_Chinese`
+- ~7,300 records, no API key required
+- English text fields are stored in UPPERCASE (case-sensitive LIKE)
