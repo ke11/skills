@@ -14,10 +14,15 @@ Each skill is a standalone directory under `skills/`. A skill must contain a `SK
 skills/
   hk-weather/
     SKILL.md              # Skill instructions (required)
-  kmb-eta/
+    scripts/
+      run.sh              # Shell wrapper (path resolution)
+      query.py            # Python query script
+  hk-kmb-eta/
     SKILL.md              # Skill instructions (required)
-    query.py              # Python query script
-    data.json             # Bundled offline data
+    scripts/
+      run.sh              # Shell wrapper (path resolution)
+      query.py            # Python query script
+      data.json           # Bundled offline data
 ```
 
 ### Plugin Discovery
@@ -66,7 +71,7 @@ Step-by-step guidance on how to implement the skill...
 - Provide exact output format templates with field names in `{braces}`
 - Include formatting rules (date formats, number precision, field omission rules)
 
-See `skills/weather/SKILL.md` for a detailed example with parallel API fetching, error handling, multi-language support, and complex output formatting.
+See `skills/hk-weather/` for an example skill with a Python query script, and `skills/hk-kmb-eta/` for another.
 
 ## Adding a New Skill
 
@@ -113,7 +118,7 @@ The plugin.json metadata (name, version, description, homepage, repository, keyw
 | Skill | Description |
 |-------|-------------|
 | `hk-weather` | Hong Kong Observatory real-time weather data |
-| `kmb-eta` | KMB real-time bus ETA |
+| `hk-kmb-eta` | KMB real-time bus ETA |
 
 ## API Endpoints Reference
 
@@ -123,11 +128,11 @@ Base URL: `https://data.etabus.gov.hk/v1/transport/kmb`
 
 | Endpoint | Description | Used by |
 |----------|-------------|---------|
-| `GET /route/{route}/{direction}/1` | Route info (orig/dest names) | `kmb-eta` |
-| `GET /route-stop/{route}/{direction}/1` | Stop sequence for a route | `kmb-eta` |
-| `GET /stop` | All stops (bulk, ~6700 stops) | `kmb-eta` (bundled in data.json) |
+| `GET /route/{route}/{direction}/1` | Route info (orig/dest names) | `hk-kmb-eta` |
+| `GET /route-stop/{route}/{direction}/1` | Stop sequence for a route | `hk-kmb-eta` |
+| `GET /stop` | All stops (bulk, ~6700 stops) | `hk-kmb-eta` (bundled in data.json) |
 | `GET /stop/{stop_id}` | Individual stop detail | — |
-| `GET /eta/{stop_id}/{route}/1` | Real-time ETA | `kmb-eta` |
+| `GET /eta/{stop_id}/{route}/1` | Real-time ETA | `hk-kmb-eta` |
 
 - `{direction}`: `outbound` or `inbound`
 - All endpoints return JSON with `{ "type", "version", "generated_timestamp", "data" }` structure
@@ -137,4 +142,4 @@ Base URL: `https://data.etabus.gov.hk/v1/transport/kmb`
 
 Base URL: `https://data.weather.gov.hk/weatherAPI/opendata`
 
-See `skills/weather/SKILL.md` for full endpoint list.
+See `skills/hk-weather/scripts/query.py` for full endpoint list.

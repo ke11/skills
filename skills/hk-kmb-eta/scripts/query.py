@@ -3,7 +3,7 @@
 
 Usage: python3 query.py <route> [stop] [terminal] [en|tc] [stops]
 """
-import json, urllib.request, sys, os
+import json, urllib.request, sys, os, re
 from datetime import datetime, timezone, timedelta
 
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -12,8 +12,21 @@ BASE = "https://data.etabus.gov.hk/v1/transport/kmb"
 HKT = timezone(timedelta(hours=8))
 
 
+def sanitize(obj):
+    """Recursively strip HTML tags from all strings in API data."""
+    if isinstance(obj, str):
+        return re.sub(r'<[^>]+>', '', obj)
+    if isinstance(obj, dict):
+        return {k: sanitize(v) for k, v in obj.items()}
+    if isinstance(obj, list):
+        return [sanitize(v) for v in obj]
+    return obj
+
+
 def main():
-    args = sys.argv[1:]
+    # $ARGUMENTS arrives as a single quoted string — split it here
+    raw = " ".join(sys.argv[1:])
+    args = raw.split() if raw.strip() else []
 
     lang = 'tc'
     stops_mode = False
@@ -41,18 +54,20 @@ def main():
     with open(DATA_FILE) as f:
         db = json.load(f)
 
+    print('---BEGIN---')
     if stops_mode:
         list_stops(db, route, lang)
     elif not remaining:
         usage()
     else:
         query_eta(db, route, remaining, lang)
+    print('---END---')
 
 
 def usage():
-    print('用法: /kmb-eta <路線> <車站名> [總站名] [en|tc]')
-    print('例子: /kmb-eta 42C 業成街 藍田')
-    print('      /kmb-eta 42C stops')
+    print('用法: /hk-kmb-eta <路線> <車站名> [總站名] [en|tc]')
+    print('例子: /hk-kmb-eta 42C 業成街 藍田')
+    print('      /hk-kmb-eta 42C stops')
 
 
 def list_stops(db, route, lang):
@@ -82,7 +97,7 @@ def list_stops(db, route, lang):
     if not found:
         print('ERROR=NO_ROUTE')
     else:
-        hint = f'_Usage: /kmb-eta {route} <stop name> <terminal> to query ETA_' if lang == 'en' else f'_使用方式: /kmb-eta {route} <車站名稱> <總站名> 查詢到站時間_'
+        hint = f'_Usage: /hk-kmb-eta {route} <stop name> <terminal> to query ETA_' if lang == 'en' else f'_使用方式: /hk-kmb-eta {route} <車站名稱> <總站名> 查詢到站時間_'
         print(hint)
 
 
@@ -161,7 +176,7 @@ def query_eta(db, route, remaining, lang):
     # Fetch ETA (only live API call)
     try:
         with urllib.request.urlopen(f'{BASE}/eta/{stop_id}/{route}/1', timeout=10) as r:
-            eta_data = json.loads(r.read())
+            eta_data = sanitize(json.loads(r.read()))
     except:
         eta_data = None
 

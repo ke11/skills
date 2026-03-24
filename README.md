@@ -2,108 +2,104 @@
 
 繁體中文 | [English](README.en.md)
 
-> **Beta** — 本項目正在休閒開發中。技能、API 和配置格式可能會無通知地改變。歡迎提供反饋和貢獻。
+> **Beta** — 本項目正在積極開發中。技能、API 和配置格式可能會無通知地改變。歡迎提供反饋和貢獻。
 
-為香港設計的 AI 代理開發技能。
+為香港設計的 AI 代理技能。所有數據來自公開 API，無需金鑰。
 
----
+## 快速安裝
 
-## Installation
-
-安裝 [天氣技能](#weather--香港天氣)：
 ```bash
 npx skills add ke11/skills --skill hk-weather
-```
-
-安裝 [九巴到站技能](#kmb-eta--九巴到站時間)：
-```bash
-npx skills add ke11/skills --skill kmb-eta
+npx skills add ke11/skills --skill hk-kmb-eta
 ```
 
 ---
 
-## Skills
+## 技能一覽
 
-### weather — 香港天氣
+| 技能 | 功能 | 數據來源 |
+|------|------|---------|
+| [hk-weather](#hk-weather) | 即時天氣、預報、警告、雨量 | [香港天文台](https://data.weather.gov.hk) |
+| [hk-kmb-eta](#hk-kmb-eta) | 巴士到站時間、路線查詢 | [九巴開放數據](https://data.etabus.gov.hk) |
 
-從[香港天文台開放數據 API](https://data.weather.gov.hk/weatherAPI/doc/HKO_Open_Data_API_Documentation.pdf) 獲取即時天氣資訊。無需 API 金鑰。
+---
 
-#### Usage
+## hk-weather
 
-**關鍵字指令** (精確模式) — 使用特定關鍵字以獲得對應數據：
+香港天氣
 
-| 指令 | 獲取數據 | API | 速度 |
-|------|---------|-----|------|
-| `/hk-weather` | 天氣概況摘要 | 1 | 快 |
-| `/hk-weather stations` | 各站氣溫、濕度、雨量 | 1 | 快 |
-| `/hk-weather forecast` | 9天預報 | 1 | 快 |
-| `/hk-weather rainfall` | 每小時雨量 | 1 | 快 |
-| `/hk-weather warning` | 生效警告 | 2 | 中 |
-| `/hk-weather detail` | 各站數據 + 預報 | 2 | 中 |
-| `/hk-weather all` | 所有資訊 | 6 | 慢 |
+從香港天文台開放數據 API 獲取即時天氣資訊。
 
-**自然語言提問** (輕鬆模式) — 無需記憶指令，直接用中文提問：
+### 關鍵字指令
+
+| 指令 | 獲取數據 | 速度 |
+|------|---------|------|
+| `/hk-weather` | 天氣概況摘要 | 快 |
+| `/hk-weather stations` | 各站氣溫、濕度、雨量 | 快 |
+| `/hk-weather forecast` | 9天預報 | 快 |
+| `/hk-weather rainfall` | 每小時雨量 | 快 |
+| `/hk-weather warning` | 生效警告 | 中 |
+| `/hk-weather detail` | 各站數據 + 預報 | 中 |
+| `/hk-weather all` | 所有資訊 | 慢 |
+
+### 自然語言提問
+
+無需記憶指令，直接用中文或英文提問：
 
 | 提問範例 | 功能 |
 |---------|------|
 | `/hk-weather 今日會唔會落雨？` | 降雨查詢 |
-| `/hk-weather 幾時落雨？` | 降雨查詢 |
 | `/hk-weather 而家係咪打風？` | 颱風/警告狀況 |
-| `/hk-weather 掛幾號風球？` | 颱風/警告狀況 |
-| `/hk-weather 有冇暴雨警告？` | 天氣警告 |
 | `/hk-weather 而家幾度？` | 各站氣溫 |
-| `/hk-weather 濕唔濕？` | 各站濕度 |
 | `/hk-weather 紫外線幾高？` | 紫外線指數 |
 | `/hk-weather 下星期天氣如何？` | 9天預報 |
 
-**語言代碼** (Language Codes) — 在指令最後附加語言代碼以切換輸出語言：
+### 語言
 
-| 代碼 | 語言 | 範例 |
-|------|------|------|
-| `en` | English | `/hk-weather forecast en` |
-| `tc` | 繁體中文 (預設) | `/hk-weather forecast tc` |
-| `sc` | 簡體中文 | `/hk-weather forecast sc` |
+在指令最後附加語言代碼：`en` English、`tc` 繁體中文（預設）、`sc` 簡體中文。
 
-#### Example Output
+### 輸出範例
 
 ```
-● 香港天氣概況
+## 香港天氣概況
 
-更新時間：2026-03-22 20:45 HKT
+更新時間: 2026-03-22 20:45 HKT
 
-概況：現時影響廣東沿岸的偏東氣流正逐漸緩和。
+概況: 現時影響廣東沿岸的偏東氣流正逐漸緩和。
 
-預報 (本港地區今日天氣預測): 大致多雲。早上最低氣溫約21度。日間短暫時間有陽光，最高氣溫約27度。吹和緩偏東風。
+預報 (本港地區今日天氣預測): 大致多雲。日間短暫時間有陽光，最高氣溫約27度。
 
-展望：隨後數日部分時間有陽光。本週中後期日間炎熱。
+展望: 隨後數日部分時間有陽光。本週中後期日間炎熱。
 
 資料來源：香港天文台
 ```
 
 ---
 
-### kmb-eta — 九巴到站時間
+## hk-kmb-eta
 
-從[九巴開放數據 API](https://data.etabus.gov.hk) 獲取即時巴士到站時間。無需 API 金鑰。
+九巴到站時間
 
-#### Usage
+從九巴開放數據 API 獲取即時巴士到站時間。
+
+### 用法
 
 ```
-/kmb-eta <路線> <車站名> [總站名] [en|tc]
+/hk-kmb-eta <路線> <車站名> [總站名] [en|tc]
 ```
 
 | 指令 | 說明 |
 |------|------|
-| `/kmb-eta 42C 業成街 藍田` | 查詢往藍田方向的業成街站到站時間 |
-| `/kmb-eta 42C 業成街` | 搜尋兩個方向的業成街站 |
-| `/kmb-eta 42C stops` | 列出 42C 所有車站（查找車站名稱用） |
-| `/kmb-eta 960 建生 en` | 查詢 960 建生站（英文輸出） |
+| `/hk-kmb-eta 42C 業成街 藍田` | 查詢往藍田方向的業成街站 |
+| `/hk-kmb-eta 42C 業成街` | 搜尋兩個方向的業成街站 |
+| `/hk-kmb-eta 42C stops` | 列出 42C 所有車站 |
+| `/hk-kmb-eta 960 建生 en` | 英文輸出 |
 
-- **總站名**：用總站名指定方向（如「藍田」即往藍田方向），省略則搜尋兩個方向
-- **語言**：`tc` 繁體中文（預設）、`en` English
-- **離線資料**：路線及車站資料隨技能安裝，僅到站時間需即時查詢。更新資料：`npx skills update`
+- **總站名** — 用總站名指定方向（如「藍田」即往藍田方向），省略則搜尋兩個方向
+- **語言** — `tc` 繁體中文（預設）、`en` English
+- **離線資料** — 路線及車站資料隨技能安裝，僅到站時間需即時查詢
 
-#### Example Output
+### 輸出範例
 
 ```
 ## 巴士到站時間 — 42C
@@ -123,12 +119,14 @@ npx skills add ke11/skills --skill kmb-eta
 
 ---
 
-## Privacy
+## 私隱
 
-本插件不收集、儲存或傳輸任何用戶數據。即時到站時間直接從[九巴開放數據 API](https://data.etabus.gov.hk) 查詢，天氣資料從[香港天文台公開數據 API](https://data.weather.gov.hk) 查詢，僅使用 HTTP GET 請求，無需 API 金鑰或身份驗證。
+本插件不收集、儲存或傳輸任何用戶數據。所有數據僅使用 HTTP GET 請求從公開 API 獲取，無需 API 金鑰或身份驗證。
 
-巴士路線及車站資料來源於 [DATA.GOV.HK](https://data.gov.hk)，由九龍巴士（一九三三）有限公司提供，依據[資料一線通使用條款](https://data.gov.hk/tc/terms-and-conditions)使用。
+- 天氣資料：[香港天文台公開數據 API](https://data.weather.gov.hk)
+- 到站時間：[九巴開放數據 API](https://data.etabus.gov.hk)
+- 巴士路線及車站資料來源於 [DATA.GOV.HK](https://data.gov.hk)，依據[資料一線通使用條款](https://data.gov.hk/tc/terms-and-conditions)使用
 
-## License
+## 授權
 
 MIT
