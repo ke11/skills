@@ -211,9 +211,8 @@ Source: Companies Registry / CSDI
 This plugin does not collect, store, or transmit any user data. All data is fetched from public APIs using HTTP GET requests only. No API keys or authentication required.
 
 - Weather data: [HK Observatory Open Data API](https://data.weather.gov.hk)
-- Bus ETA: [KMB Open Data API](https://data.etabus.gov.hk)
 - Bus route and stop data sourced from [DATA.GOV.HK](https://data.gov.hk), used under the [DATA.GOV.HK Terms and Conditions](https://data.gov.hk/en/terms-and-conditions)
-- A&E waiting times: [Hospital Authority Open Data](https://www.ha.org.hk/opendata) / [CSDI Portal](https://portal.csdi.gov.hk)
+- A&E waiting times: [Hospital Authority](https://www.ha.org.hk) / [CSDI Portal](https://portal.csdi.gov.hk)
 - TCSP licensee data: [Companies Registry](https://www.cr.gov.hk) / [CSDI Portal](https://portal.csdi.gov.hk)
 
 ## License
