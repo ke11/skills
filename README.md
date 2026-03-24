@@ -2,7 +2,7 @@
 
 繁體中文 | [English](README.en.md)
 
-> **Beta** — 本項目正在積極開發中。技能、API 和配置格式可能會無通知地改變。歡迎提供反饋和貢獻。
+> **Beta** — 休閒項目。技能、API 和配置格式可能會無通知地改變。歡迎提供反饋和貢獻。
 
 為香港設計的 AI 代理技能。所有數據來自公開 API，無需金鑰。
 
@@ -11,6 +11,7 @@
 ```bash
 npx skills add ke11/skills --skill hk-weather
 npx skills add ke11/skills --skill hk-kmb-eta
+npx skills add ke11/skills --skill hk-aed-wait
 ```
 
 ---
@@ -21,6 +22,7 @@ npx skills add ke11/skills --skill hk-kmb-eta
 |------|------|---------|
 | [hk-weather](#hk-weather) | 即時天氣、預報、警告、雨量 | [香港天文台](https://data.weather.gov.hk) |
 | [hk-kmb-eta](#hk-kmb-eta) | 巴士到站時間、路線查詢 | [九巴開放數據](https://data.etabus.gov.hk) |
+| [hk-aed-wait](#hk-aed-wait) | 急症室等候時間 | [醫院管理局](https://www.ha.org.hk/opendata) |
 
 ---
 
@@ -119,6 +121,50 @@ npx skills add ke11/skills --skill hk-kmb-eta
 
 ---
 
+## hk-aed-wait
+
+急症室等候時間
+
+從醫院管理局開放數據 API 獲取即時急症室等候時間，涵蓋全港18間公立醫院，每約15分鐘更新。
+
+### 用法
+
+```
+/hk-aed-wait                     所有醫院（按地區分組）
+/hk-aed-wait <醫院名>            查詢指定醫院
+/hk-aed-wait <hospital> en       英文輸出
+```
+
+| 指令 | 說明 |
+|------|------|
+| `/hk-aed-wait` | 全部醫院等候時間 |
+| `/hk-aed-wait 屯門` | 屯門醫院等候時間 |
+| `/hk-aed-wait Queen en` | 搜尋 "Queen" 相關醫院（英文） |
+
+- **語言** — `tc` 繁體中文（預設）、`en` English、`sc` 簡體中文
+
+### 輸出範例
+
+```
+## 急症室等候時間
+
+於2026年3月24日 下午6時15分，病人到達急症室求診預計等候時間。
+一半輪候病人能在以下時間內就診，大部份人可於括號內顯示的時間就診。
+
+| 醫院 | 分流類別 I | 分流類別 II | 分流類別 III | 分流類別 IV & V |
+|------|:---------:|:----------:|:-----------:|:--------------:|
+| 港島區 | | | | |
+| 瑪麗醫院 | 0 分鐘 | 少於 15 分鐘 | 35 分鐘 (79 分鐘) | 3 小時 (4 小時) |
+| ...
+
+分流類別 I-V 指危殆、危急、緊急、次緊急及非緊急類別。
+🔴 指急症室正在治理分流類別 I/II 的病人。
+
+資料來源：醫院管理局 / 空間數據共享平台 CSDI
+```
+
+---
+
 ## 私隱
 
 本插件不收集、儲存或傳輸任何用戶數據。所有數據僅使用 HTTP GET 請求從公開 API 獲取，無需 API 金鑰或身份驗證。
@@ -126,6 +172,7 @@ npx skills add ke11/skills --skill hk-kmb-eta
 - 天氣資料：[香港天文台公開數據 API](https://data.weather.gov.hk)
 - 到站時間：[九巴開放數據 API](https://data.etabus.gov.hk)
 - 巴士路線及車站資料來源於 [DATA.GOV.HK](https://data.gov.hk)，依據[資料一線通使用條款](https://data.gov.hk/tc/terms-and-conditions)使用
+- 急症室等候時間：[醫院管理局開放數據](https://www.ha.org.hk/opendata) / [CSDI 空間數據共享平台](https://portal.csdi.gov.hk)
 
 ## 授權
 

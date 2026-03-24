@@ -1,11 +1,11 @@
 {
   "name": "hk-skills",
-  "version": "1.1.0",
-  "description": "Hong Kong real-time data skills: HK Observatory weather (hk-weather) and KMB bus ETA (hk-kmb-eta). No API keys required.",
+  "version": "1.2.0",
+  "description": "Hong Kong real-time data skills: HK Observatory weather (hk-weather), KMB bus ETA (hk-kmb-eta), and A&E waiting times (hk-aed-wait). No API keys required.",
   "author": { "name": "ke11", "url": "https://github.com/ke11" },
   "homepage": "https://github.com/ke11/skills",
   "repository": "https://github.com/ke11/skills",
   "license": "MIT",
-  "keywords": ["skills", "weather", "hong-kong", "hko", "kmb", "bus", "eta", "ai-agents", "claude-code"],
+  "keywords": ["skills", "weather", "hong-kong", "hko", "kmb", "bus", "eta", "hospital", "aed", "waiting-time", "ai-agents", "claude-code"],
   "skills": ["./skills/"]
 }

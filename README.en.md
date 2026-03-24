@@ -2,7 +2,7 @@
 
 [繁體中文](README.md) | English
 
-> **Beta** — This project is in active development. Skills, APIs, and configuration formats may change without notice. Feedback and contributions welcome.
+> **Beta** — A casual project. Skills, APIs, and configuration formats may change without notice. Feedback and contributions welcome.
 
 AI agent skills designed for Hong Kong. All data from public APIs, no keys required.
 
@@ -11,6 +11,7 @@ AI agent skills designed for Hong Kong. All data from public APIs, no keys requi
 ```bash
 npx skills add ke11/skills --skill hk-weather
 npx skills add ke11/skills --skill hk-kmb-eta
+npx skills add ke11/skills --skill hk-aed-wait
 ```
 
 ---
@@ -21,6 +22,7 @@ npx skills add ke11/skills --skill hk-kmb-eta
 |-------|----------|-------------|
 | [hk-weather](#hk-weather) | Real-time weather, forecasts, warnings, rainfall | [HK Observatory](https://data.weather.gov.hk) |
 | [hk-kmb-eta](#hk-kmb-eta) | Bus arrival times, route lookup | [KMB Open Data](https://data.etabus.gov.hk) |
+| [hk-aed-wait](#hk-aed-wait) | A&E waiting times | [Hospital Authority](https://www.ha.org.hk/opendata) |
 
 ---
 
@@ -119,6 +121,50 @@ Source: DATA.GOV.HK / KMB
 
 ---
 
+## hk-aed-wait
+
+A&E Waiting Time
+
+Fetches real-time Accident & Emergency waiting times from the Hospital Authority Open Data API. Covers all 18 public hospitals, updated every ~15 minutes.
+
+### Usage
+
+```
+/hk-aed-wait                     All hospitals (grouped by region)
+/hk-aed-wait <hospital name>     Search specific hospital
+/hk-aed-wait <hospital> en       English output
+```
+
+| Command | Description |
+|---------|-------------|
+| `/hk-aed-wait` | All hospitals waiting times |
+| `/hk-aed-wait 屯門` | Tuen Mun Hospital waiting time |
+| `/hk-aed-wait Queen en` | Search "Queen" hospitals in English |
+
+- **Language** — `tc` Traditional Chinese (default), `en` English, `sc` Simplified Chinese
+
+### Example Output
+
+```
+## A&E Waiting Time
+
+As of 24/3/2026 6:15PM, estimated A&E waiting time upon arrival.
+Half of waiting patients can be seen within the time shown; majority within the time in brackets.
+
+| Hospital | Triage I | Triage II | Triage III | Triage IV & V |
+|----------|:--------:|:---------:|:----------:|:-------------:|
+| Hong Kong Island | | | | |
+| Queen Mary Hospital | 0 minute | less than 15 minutes | 35 minutes (79 minutes) | 3 hours (4 hours) |
+| ...
+
+Triage I-V: Critical, Emergency, Urgent, Semi-urgent, Non-urgent.
+🔴 = A&E is currently managing Triage I/II cases.
+
+Source: Hospital Authority / CSDI
+```
+
+---
+
 ## Privacy
 
 This plugin does not collect, store, or transmit any user data. All data is fetched from public APIs using HTTP GET requests only. No API keys or authentication required.
@@ -126,6 +172,7 @@ This plugin does not collect, store, or transmit any user data. All data is fetc
 - Weather data: [HK Observatory Open Data API](https://data.weather.gov.hk)
 - Bus ETA: [KMB Open Data API](https://data.etabus.gov.hk)
 - Bus route and stop data sourced from [DATA.GOV.HK](https://data.gov.hk), used under the [DATA.GOV.HK Terms and Conditions](https://data.gov.hk/en/terms-and-conditions)
+- A&E waiting times: [Hospital Authority Open Data](https://www.ha.org.hk/opendata) / [CSDI Portal](https://portal.csdi.gov.hk)
 
 ## License
 
