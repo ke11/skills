@@ -211,9 +211,8 @@ TCSP 持牌人查詢
 本插件不收集、儲存或傳輸任何用戶數據。所有數據僅使用 HTTP GET 請求從公開 API 獲取，無需 API 金鑰或身份驗證。
 
 - 天氣資料：[香港天文台公開數據 API](https://data.weather.gov.hk)
-- 到站時間：[九巴開放數據 API](https://data.etabus.gov.hk)
 - 巴士路線及車站資料來源於 [DATA.GOV.HK](https://data.gov.hk)，依據[資料一線通使用條款](https://data.gov.hk/tc/terms-and-conditions)使用
-- 急症室等候時間：[醫院管理局開放數據](https://www.ha.org.hk/opendata) / [CSDI 空間數據共享平台](https://portal.csdi.gov.hk)
+- 急症室等候時間：[醫院管理局](https://www.ha.org.hk) / [CSDI 空間數據共享平台](https://portal.csdi.gov.hk)
 - TCSP 持牌人資料：[公司註冊處](https://www.cr.gov.hk) / [CSDI 空間數據共享平台](https://portal.csdi.gov.hk)
 
 ## 授權
