@@ -21,10 +21,13 @@ hk-planner/
 
 ## Dependencies
 
-This skill calls scripts from other skills. Check they exist before using:
+This skill requires the `gws` CLI and calls scripts from other skills. Check they exist before using:
 
 ```bash
-# Check dependencies
+# Check gws CLI
+which gws > /dev/null 2>&1 || echo "MISSING: gws CLI — install with: npm install -g @nicholasgws/gws"
+
+# Check sub-skills
 for skill in hk-holiday hk-weather; do
   found=false
   for path in .claude/skills .agents/skills .agent/skills skills; do
@@ -34,7 +37,7 @@ for skill in hk-holiday hk-weather; do
 done
 ```
 
-If a dependency is missing, tell the user which skill to install and continue with the data sources that are available.
+If `gws` is missing, the calendar features won't work — tell the user to install it. If a sub-skill is missing, continue with the data sources that are available.
 
 ## How It Works
 
