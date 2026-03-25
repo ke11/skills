@@ -129,6 +129,7 @@ The plugin.json metadata (name, version, description, homepage, repository, keyw
 | `hk-aed-wait` | Hospital A&E real-time waiting times |
 | `hk-tcsp-licence` | TCSP licensee lookup (Companies Registry / CSDI) |
 | `hk-holiday` | Hong Kong public holidays (1823 government calendar) |
+| `hk-planner` | Activity planner orchestrating calendar, holidays, and weather |
 
 ## API Endpoints Reference
 
