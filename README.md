@@ -13,6 +13,7 @@ npx skills add ke11/skills --skill hk-weather
 npx skills add ke11/skills --skill hk-kmb-eta
 npx skills add ke11/skills --skill hk-aed-wait
 npx skills add ke11/skills --skill hk-tcsp-licence
+npx skills add ke11/skills --skill hk-holiday
 ```
 
 ---
@@ -25,6 +26,7 @@ npx skills add ke11/skills --skill hk-tcsp-licence
 | [hk-kmb-eta](#hk-kmb-eta) | 巴士到站時間、路線查詢 | [九巴開放數據](https://data.etabus.gov.hk) |
 | [hk-aed-wait](#hk-aed-wait) | 急症室等候時間 | [醫院管理局](https://www.ha.org.hk/opendata) |
 | [hk-tcsp-licence](#hk-tcsp-licence) | TCSP 持牌人查詢 | [公司註冊處 / CSDI](https://portal.csdi.gov.hk) |
+| [hk-holiday](#hk-holiday) | 公眾假期查詢 | [1823 政府熱線](https://www.1823.gov.hk) |
 
 ---
 
@@ -206,6 +208,50 @@ TCSP 持牌人查詢
 
 ---
 
+## hk-holiday
+
+公眾假期
+
+從 1823 政府日曆 API 獲取香港公眾假期資料，支援繁體中文、簡體中文及英文。
+
+### 用法
+
+```
+/hk-holiday                即將來臨的公眾假期
+/hk-holiday 2025           2025年所有公眾假期
+/hk-holiday next           下一個公眾假期
+/hk-holiday next en        下一個公眾假期（英文）
+```
+
+| 指令 | 說明 |
+|------|------|
+| `/hk-holiday` | 即將來臨的假期（附倒數） |
+| `/hk-holiday 2025` | 2025年完整假期表 |
+| `/hk-holiday 2026 sc` | 2026年假期表（簡體中文） |
+| `/hk-holiday next` | 下一個公眾假期 |
+| `/hk-holiday next en` | 下一個公眾假期（英文） |
+
+- **語言** — `tc` 繁體中文（預設）、`en` English、`sc` 簡體中文
+
+### 輸出範例
+
+```
+## 即將來臨的香港公眾假期
+
+| 日期 | 假期名稱 | 最長連續假期 | 倒數 |
+|------|----------|------|------|
+| 2026-04-03 (五) | 🔴 耶穌受難節 | ⭐ 5日 (4/3 → 4/7) | 9 日後 |
+| 2026-04-04 (六) | 🔴 耶穌受難節翌日 |  | 10 日後 |
+| 2026-05-01 (五) | 🔴 勞動節 | ⭐ 3日 (5/1 → 5/3) | 37 日後 |
+| ...
+
+🔴 假期 · ⚫ 已過 · ⭐ 最長連續假期（含週末）
+
+資料來源：1823，香港特別行政區政府
+```
+
+---
+
 ## 私隱
 
 本插件不收集、儲存或傳輸任何用戶數據。所有數據僅使用 HTTP GET 請求從公開 API 獲取，無需 API 金鑰或身份驗證。
@@ -214,6 +260,7 @@ TCSP 持牌人查詢
 - 巴士路線及車站資料來源於 [DATA.GOV.HK](https://data.gov.hk)，依據[資料一線通使用條款](https://data.gov.hk/tc/terms-and-conditions)使用
 - 急症室等候時間：[醫院管理局](https://www.ha.org.hk) / [CSDI 空間數據共享平台](https://portal.csdi.gov.hk)
 - TCSP 持牌人資料：[公司註冊處](https://www.cr.gov.hk) / [CSDI 空間數據共享平台](https://portal.csdi.gov.hk)
+- 公眾假期：[1823 政府熱線](https://www.1823.gov.hk) / [資料一線通](https://data.gov.hk)
 
 ## 授權
 

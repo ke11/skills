@@ -128,6 +128,7 @@ The plugin.json metadata (name, version, description, homepage, repository, keyw
 | `hk-kmb-eta` | KMB real-time bus ETA |
 | `hk-aed-wait` | Hospital A&E real-time waiting times |
 | `hk-tcsp-licence` | TCSP licensee lookup (Companies Registry / CSDI) |
+| `hk-holiday` | Hong Kong public holidays (1823 government calendar) |
 
 ## API Endpoints Reference
 
@@ -179,3 +180,16 @@ Dataset ID: `cr_rcd_1668395265357_67292`
 - Fields: `Licence_No`, `Name_of_TCSP_Licensee_in_English`, `Name_of_TCSP_Licensee_in_Chinese`, `Business_Address`, `Remarks_in_English`, `Remarks_in_Chinese`
 - ~7,300 records, no API key required
 - English text fields are stored in UPPERCASE (case-sensitive LIKE)
+
+### 1823 Public Holidays Calendar API
+
+| Endpoint | Description | Used by |
+|----------|-------------|---------|
+| `GET /common/ical/en.json` | Public holidays (English) | `hk-holiday` |
+| `GET /common/ical/tc.json` | Public holidays (繁體中文) | `hk-holiday` |
+| `GET /common/ical/sc.json` | Public holidays (简体中文) | `hk-holiday` |
+
+- Base URL: `https://www.1823.gov.hk`
+- Returns iCal-formatted JSON: `vcalendar[0].vevent[]` array
+- Each event: `dtstart[0]` (YYYYMMDD date string), `summary` (holiday name)
+- Covers multiple years, no API key required
