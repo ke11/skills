@@ -2,6 +2,7 @@
 name: hk-planner
 description: "Plan outings, day trips, and activities in Hong Kong by checking calendar availability, public holidays, and weather forecasts. Use this skill when the user wants to plan a trip, find good days for outdoor activities, schedule a hike or BBQ, plan around long weekends, 計劃行程, 搵日去行山, 邊日適合戶外活動, or asks things like 'when should I go hiking next month' or '下個月邊日好天可以去沙灘'."
 allowed-tools: [Bash]
+disable-model-invocation: true
 model: haiku
 effort: low
 argument-hint: "[activity] [date range] [calendar:name] [en|tc|sc]"
