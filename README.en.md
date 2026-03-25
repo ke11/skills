@@ -13,6 +13,7 @@ npx skills add ke11/skills --skill hk-weather
 npx skills add ke11/skills --skill hk-kmb-eta
 npx skills add ke11/skills --skill hk-aed-wait
 npx skills add ke11/skills --skill hk-tcsp-licence
+npx skills add ke11/skills --skill hk-holiday
 ```
 
 ---
@@ -25,6 +26,7 @@ npx skills add ke11/skills --skill hk-tcsp-licence
 | [hk-kmb-eta](#hk-kmb-eta) | Bus arrival times, route lookup | [KMB Open Data](https://data.etabus.gov.hk) |
 | [hk-aed-wait](#hk-aed-wait) | A&E waiting times | [Hospital Authority](https://www.ha.org.hk/opendata) |
 | [hk-tcsp-licence](#hk-tcsp-licence) | TCSP licensee lookup | [Companies Registry / CSDI](https://portal.csdi.gov.hk) |
+| [hk-holiday](#hk-holiday) | Public holidays lookup | [1823 Government Hotline](https://www.1823.gov.hk) |
 
 ---
 
@@ -206,6 +208,50 @@ Source: Companies Registry / CSDI
 
 ---
 
+## hk-holiday
+
+Public Holidays
+
+Fetches Hong Kong public holiday data from the 1823 government calendar API. Supports Traditional Chinese, Simplified Chinese, and English.
+
+### Usage
+
+```
+/hk-holiday                Upcoming public holidays
+/hk-holiday 2025           All 2025 public holidays
+/hk-holiday next           Next upcoming holiday
+/hk-holiday next en        Next holiday in English
+```
+
+| Command | Description |
+|---------|-------------|
+| `/hk-holiday` | Upcoming holidays with countdown |
+| `/hk-holiday 2025` | Full 2025 holiday calendar |
+| `/hk-holiday 2026 sc` | 2026 holidays in Simplified Chinese |
+| `/hk-holiday next` | Next public holiday |
+| `/hk-holiday next en` | Next public holiday in English |
+
+- **Language** — `tc` Traditional Chinese (default), `en` English, `sc` Simplified Chinese
+
+### Example Output
+
+```
+## Upcoming Hong Kong Public Holidays
+
+| Date | Holiday | Longest Break | Countdown |
+|------|---------|-------|-----------|
+| 2026-04-03 (Fri) | 🔴 Good Friday | ⭐ 5d (4/3 → 4/7) | in 9 days |
+| 2026-04-04 (Sat) | 🔴 The day following Good Friday |  | in 10 days |
+| 2026-05-01 (Fri) | 🔴 Labour Day | ⭐ 3d (5/1 → 5/3) | in 37 days |
+| ...
+
+🔴 Holiday · ⚫ Passed · ⭐ Longest consecutive days off (incl. weekends)
+
+Source: 1823, HKSAR Government
+```
+
+---
+
 ## Privacy
 
 This plugin does not collect, store, or transmit any user data. All data is fetched from public APIs using HTTP GET requests only. No API keys or authentication required.
@@ -214,6 +260,7 @@ This plugin does not collect, store, or transmit any user data. All data is fetc
 - Bus route and stop data sourced from [DATA.GOV.HK](https://data.gov.hk), used under the [DATA.GOV.HK Terms and Conditions](https://data.gov.hk/en/terms-and-conditions)
 - A&E waiting times: [Hospital Authority](https://www.ha.org.hk) / [CSDI Portal](https://portal.csdi.gov.hk)
 - TCSP licensee data: [Companies Registry](https://www.cr.gov.hk) / [CSDI Portal](https://portal.csdi.gov.hk)
+- Public holidays: [1823 Government Hotline](https://www.1823.gov.hk) / [DATA.GOV.HK](https://data.gov.hk)
 
 ## License
 
