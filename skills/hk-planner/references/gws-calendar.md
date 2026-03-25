@@ -28,15 +28,15 @@ Returns `calendars.CALENDAR_ID.busy[]` array with `{start, end}` pairs.
 ## Create Event
 
 ```bash
-gws calendar +insert --params '{"calendarId": "<CALENDAR_ID>"}' --json '{
-  "summary": "Hiking at Dragon's Back",
-  "start": {"date": "2026-04-05"},
-  "end": {"date": "2026-04-06"},
-  "description": "Planned via hk-planner skill"
-}'
+gws calendar +insert \
+  --calendar "<CALENDAR_ID>" \
+  --summary "Hiking at Dragon's Back" \
+  --start "2026-04-05T10:00:00+08:00" \
+  --end "2026-04-05T17:00:00+08:00" \
+  --description "Planned via hk-planner skill"
 ```
 
-For all-day events use `date` (YYYY-MM-DD). For timed events use `dateTime` (ISO 8601).
+Options: `--calendar` (default: primary), `--summary`, `--start`, `--end` (ISO 8601/RFC3339), `--location`, `--description`, `--attendee` (repeatable), `--meet`.
 
 ## List Calendars
 
