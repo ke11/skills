@@ -24,7 +24,7 @@
 
 | 依賴 | 用途 | 安裝 |
 |------|------|------|
-| `gws` CLI | Google Calendar 查詢 | `npm install -g @nicholasgws/gws` |
+| `gws` CLI | Google Calendar 查詢 | `npm install -g @googleworkspace/cli` |
 | `hk-holiday` | 公眾假期資料 | `npx skills add ke11/skills --skill hk-holiday` |
 | `hk-weather` | 天氣預報 | `npx skills add ke11/skills --skill hk-weather` |
 

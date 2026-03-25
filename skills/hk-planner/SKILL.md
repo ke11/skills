@@ -25,7 +25,7 @@ This skill requires the `gws` CLI and calls scripts from other skills. Check the
 
 ```bash
 # Check gws CLI
-which gws > /dev/null 2>&1 || echo "MISSING: gws CLI — install with: npm install -g @nicholasgws/gws"
+which gws > /dev/null 2>&1 || echo "MISSING: gws CLI — install with: npm install -g @googleworkspace/cli"
 
 # Check sub-skills
 for skill in hk-holiday hk-weather; do
