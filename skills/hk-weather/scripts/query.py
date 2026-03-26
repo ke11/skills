@@ -154,6 +154,43 @@ def _l(lang, en, zh):
 
 
 # ---------------------------------------------------------------------------
+# Shared helpers for formatters
+# ---------------------------------------------------------------------------
+
+def _warning_lines(data):
+    """Return blockquote lines for warningMessage, or empty list."""
+    wm = data.get("warningMessage", "")
+    if isinstance(wm, list):
+        wm = " ".join(wm)
+    if wm and wm.strip():
+        return [f"> {wm.strip()}", ""]
+    return []
+
+
+def _rainfall_table(rains, lang, col_header=None):
+    """Return markdown lines for a rainfall table built from rhrread rainfall data.
+
+    *col_header* overrides the value-column label (default: ``Rainfall (mm)``
+    in English, ``雨量 (mm)`` in Chinese).
+
+    Returns a list of strings (without leading newline) — the caller decides
+    how to join/prefix them.
+    """
+    wet = [r for r in rains if r.get("max") and r["max"] > 0]
+    if wet:
+        if col_header is None:
+            col_header = _l(lang, "Rainfall (mm)", "雨量 (mm)")
+        lines = [
+            f"| {_l(lang, 'Station', '地點')} | {col_header} |",
+            "|------|------|",
+        ]
+        for r in sorted(wet, key=lambda x: x.get("max", 0), reverse=True):
+            lines.append(f"| {r['place']} | {r['max']} |")
+        return lines
+    return []
+
+
+# ---------------------------------------------------------------------------
 # Formatters
 # ---------------------------------------------------------------------------
 
@@ -186,14 +223,7 @@ def format_default(data, lang):
 def format_stations(data, lang):
     if not data:
         return ""
-    lines = []
-
-    # Warning message
-    wm = data.get("warningMessage", "")
-    if isinstance(wm, list):
-        wm = " ".join(wm)
-    if wm and wm.strip():
-        lines += [f"> {wm.strip()}", ""]
+    lines = _warning_lines(data)
 
     lines.append(f"## {_l(lang, 'Current Weather', '目前天氣')}")
 
@@ -222,13 +252,10 @@ def format_stations(data, lang):
     # Rainfall
     rains = data.get("rainfall", {}).get("data", [])
     if rains:
-        wet = [r for r in rains if r.get("max") and r["max"] > 0]
-        if wet:
+        table = _rainfall_table(rains, lang, col_header="mm")
+        if table:
             lines.append(f"\n### {_l(lang, 'Rainfall', '降雨')}\n")
-            lines.append(f"| {_l(lang, 'Station', '地點')} | mm |")
-            lines.append("|------|------|")
-            for r in sorted(wet, key=lambda x: x.get("max", 0), reverse=True):
-                lines.append(f"| {r['place']} | {r['max']} |")
+            lines += table
         else:
             lines.append(f"\n**{_l(lang, 'Rainfall', '降雨')}**: {_l(lang, 'No significant rainfall', '各區無顯著雨量')}")
 
@@ -368,11 +395,7 @@ def format_rain_query(data, lang):
 
     # Warning message
     if rhrread:
-        wm = rhrread.get("warningMessage", "")
-        if isinstance(wm, list):
-            wm = " ".join(wm)
-        if wm and wm.strip():
-            lines += [f"> {wm.strip()}", ""]
+        lines += _warning_lines(rhrread)
 
     lines.append(f"## {_l(lang, 'Rain Status', '降雨情況')}")
 
@@ -382,13 +405,11 @@ def format_rain_query(data, lang):
             lines.append(f"\n**{_l(lang, 'Updated', '更新時間')}**: {ut}")
 
         rains = rhrread.get("rainfall", {}).get("data", [])
-        wet = [r for r in rains if r.get("max") and r["max"] > 0]
         lines.append(f"\n**{_l(lang, 'Current Rainfall', '目前降雨')}**:")
-        if wet:
-            lines.append(f"\n| {_l(lang, 'Station', '地點')} | {_l(lang, 'Rainfall (mm)', '雨量 (mm)')} |")
-            lines.append("|------|------|")
-            for r in sorted(wet, key=lambda x: x.get("max", 0), reverse=True):
-                lines.append(f"| {r['place']} | {r['max']} |")
+        table = _rainfall_table(rains, lang)
+        if table:
+            lines.append("")
+            lines += table
         else:
             lines.append(f"\n{_l(lang, 'No rainfall currently recorded.', '各區目前無錄得雨量。')}")
 

@@ -5,7 +5,6 @@ import sys
 import json
 from datetime import datetime, date, timedelta
 from urllib.request import urlopen, Request
-from urllib.error import URLError
 
 ENDPOINTS = {
     "en": "https://www.1823.gov.hk/common/ical/en.json",
@@ -24,8 +23,6 @@ def parse_args(argv):
     lang = "tc"
     year = None
     show_next = False
-    remaining = []
-
     for tok in argv:
         low = tok.lower()
         if low in LANG_TOKENS:
@@ -34,10 +31,8 @@ def parse_args(argv):
             show_next = True
         elif low.isdigit() and len(low) == 4:
             year = int(low)
-        else:
-            remaining.append(tok)
 
-    return lang, year, show_next, remaining
+    return lang, year, show_next
 
 
 # ---------------------------------------------------------------------------
@@ -80,7 +75,6 @@ def parse_events(data):
 
 WEEKDAY_EN = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
 WEEKDAY_TC = ["一", "二", "三", "四", "五", "六", "日"]
-WEEKDAY_SC = WEEKDAY_TC
 
 
 def weekday_str(dt, lang):
@@ -192,27 +186,16 @@ def format_next(events, lang, today):
     lines.append(f"**{ev['summary']}**")
     lines.append(f"{ev['date'].strftime('%Y-%m-%d')} ({weekday_str(ev['date'], lang)}) — {countdown}")
 
-    # Calculate consecutive days off around this holiday (including weekends)
-    holiday_set = {e["date"]: e["summary"] for e in upcoming}
-    d = ev["date"]
-    while True:
-        prev = d - timedelta(days=1)
-        if prev in holiday_set or prev.weekday() >= 5:
-            d = prev
-        else:
-            break
-    streak = []
-    while d in holiday_set or d.weekday() >= 5:
-        streak.append((d, holiday_set.get(d)))
-        d += timedelta(days=1)
-
-    if len(streak) >= 3:
+    # Reuse build_streak_map for consecutive days off detection
+    streak_map = build_streak_map(upcoming)
+    if ev["date"] in streak_map:
+        length, _, start, end = streak_map[ev["date"]]
         lines.append("")
         lines.append(_l(lang,
-                         f"Consecutive days off ({len(streak)} days incl. weekends):",
-                         f"連續假期（{len(streak)} 日，含週末）：",
-                         f"连续假期（{len(streak)} 日，含周末）："))
-        lines.append(f"{streak[0][0].strftime('%m-%d')} ({weekday_str(streak[0][0], lang)}) → {streak[-1][0].strftime('%m-%d')} ({weekday_str(streak[-1][0], lang)})")
+                         f"Consecutive days off ({length} days incl. weekends):",
+                         f"連續假期（{length} 日，含週末）：",
+                         f"连续假期（{length} 日，含周末）："))
+        lines.append(f"{start.strftime('%m-%d')} ({weekday_str(start, lang)}) → {end.strftime('%m-%d')} ({weekday_str(end, lang)})")
 
     return "\n".join(lines)
 
@@ -249,7 +232,6 @@ def format_year(events, year, lang):
         wd = weekday_str(ev["date"], lang)
         delta = (ev["date"] - today).days
         sc = streak_col(ev["date"], streak_map, lang)
-        in_streak = ev["date"] in streak_map
         date_col = f"{ev['date'].strftime('%Y-%m-%d')} ({wd})"
         if delta < 0:
             countdown = _l(lang, "Passed", "已過", "已过")
@@ -306,7 +288,6 @@ def format_upcoming(events, lang, today):
         wd = weekday_str(ev["date"], lang)
         countdown = days_until_str(delta, lang)
         sc = streak_col(ev["date"], streak_map, lang)
-        in_streak = ev["date"] in streak_map
         date_col = f"{ev['date'].strftime('%Y-%m-%d')} ({wd})"
         streak_display = f"⭐ {sc}" if sc else ""
         lines.append(f"| {date_col} | 🔴 {ev['summary']} | {streak_display} | {countdown} |")
@@ -327,7 +308,7 @@ def format_upcoming(events, lang, today):
 def main():
     raw = " ".join(sys.argv[1:])
     args = raw.split() if raw.strip() else []
-    lang, year, show_next, remaining = parse_args(args)
+    lang, year, show_next = parse_args(args)
 
     data = fetch_json(ENDPOINTS[lang])
     if data is None:

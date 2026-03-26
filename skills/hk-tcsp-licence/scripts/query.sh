@@ -30,77 +30,15 @@ done
 keyword="${keyword_parts[*]:-}"
 
 # ---------------------------------------------------------------------------
-# Bilingual helper
-# ---------------------------------------------------------------------------
-_l() { [ "$lang" = "en" ] && echo "$1" || echo "$2"; }
-
-attr=$(_l "_Source: Companies Registry / CSDI_" "_資料來源：公司註冊處 / 空間數據共享平台 CSDI_")
-
-# ---------------------------------------------------------------------------
-# No keyword → show usage
+# Validate required arguments
 # ---------------------------------------------------------------------------
 if [ -z "$keyword" ]; then
-  usage=$(_l \
-"## TCSP Licensee Search
-
-**Usage:** \`hk-tcsp-licence <field> <keyword> [en|tc]\`
-
-**Fields:**
-- \`name\` — search by English or Chinese name
-- \`licence\` — search by licence number
-- \`address\` — search by business address
-
-**Examples:**
-- \`hk-tcsp-licence name FULLYEAR\`
-- \`hk-tcsp-licence name 富年\`
-- \`hk-tcsp-licence licence TC000002\`
-- \`hk-tcsp-licence address wan chai en\`" \
-"## TCSP 持牌人查詢
-
-**用法：** \`hk-tcsp-licence <欄位> <關鍵字> [en|tc]\`
-
-**欄位：**
-- \`name\` — 按英文或中文名稱搜尋
-- \`licence\` — 按牌照號碼搜尋
-- \`address\` — 按營業地址搜尋
-
-**範例：**
-- \`hk-tcsp-licence name FULLYEAR\`
-- \`hk-tcsp-licence name 富年\`
-- \`hk-tcsp-licence licence TC000002\`
-- \`hk-tcsp-licence address wan chai en\`")
-  echo "---BEGIN---"
-  echo "$usage"
-  echo ""
-  echo "$attr"
-  echo "---END---"
+  echo "ERROR=NO_KEYWORD"
   exit 0
 fi
 
-# ---------------------------------------------------------------------------
-# No field → hint
-# ---------------------------------------------------------------------------
 if [ -z "$field" ]; then
-  hint=$(_l \
-"## TCSP Licensee Search
-
-Please specify a search field before \"${keyword}\".
-
-**Fields:** \`name\`, \`licence\`, \`address\`
-
-Example: \`hk-tcsp-licence name ${keyword}\`" \
-"## TCSP 持牌人查詢
-
-請在「${keyword}」前指定搜尋欄位。
-
-**欄位：** \`name\`、\`licence\`、\`address\`
-
-例如：\`hk-tcsp-licence name ${keyword}\`")
-  echo "---BEGIN---"
-  echo "$hint"
-  echo ""
-  echo "$attr"
-  echo "---END---"
+  echo "ERROR=NO_FIELD keyword=${keyword}"
   exit 0
 fi
 
@@ -146,7 +84,7 @@ response=$(curl -s --max-time 15 \
   "$WFS_URL" 2>/dev/null) || true
 
 if [ -z "$response" ]; then
-  _l "Failed to reach CSDI API. Please try again later." "無法連接 CSDI API，請稍後再試。"
+  echo "ERROR=API_UNREACHABLE"
   exit 1
 fi
 
