@@ -98,47 +98,80 @@ def _l(lang, en, zh):
 
 
 # ---------------------------------------------------------------------------
-# Sorting helper
+# Formatting helpers
 # ---------------------------------------------------------------------------
 
-def parse_wait_minutes(val):
-    """Extract a numeric minute value from wait time strings for sorting."""
-    if not val or not isinstance(val, str):
-        return 9999
-    # "23 minutes" / "23 分鐘"
-    m = re.search(r'(\d+)\s*(?:minute|分鐘)', val)
-    if m:
-        return int(m.group(1))
-    # "1.5 hours" / "1.5 小時"
-    m = re.search(r'([\d.]+)\s*(?:hour|小時)', val)
-    if m:
-        return int(float(m.group(1)) * 60)
-    # "0 minute" / "0 分鐘"
-    if re.match(r'^0\s', val):
-        return 0
-    return 9999
+def _pct_cell(h, p50_key, p95_key):
+    """Format a percentile cell: 'p50 (p95)' or just 'p50' if p95 is empty."""
+    p50 = h.get(p50_key, "—")
+    p95 = h.get(p95_key, "")
+    return f"{p50} ({p95})" if p95 else p50
+
+
+def _triage_cell(wt, manage, lang=None):
+    """Format a triage I/II cell with managing-case indicator."""
+    if manage in ("Y", "是"):
+        return f"{wt} 🔴"
+    return wt
+
+
+def _table_header(lang):
+    """Return the markdown table header lines for A&E wait time tables."""
+    if lang == "en":
+        return [
+            f"\n| Hospital | Triage I | Triage II | Triage III | Triage IV & V |",
+            "|----------|:--------:|:---------:|:----------:|:-------------:|",
+        ]
+    return [
+        f"\n| 醫院 | 分流類別 I | 分流類別 II | 分流類別 III | 分流類別 IV & V |",
+        "|------|:---------:|:----------:|:-----------:|:--------------:|",
+    ]
+
+
+def _legend(lang):
+    """Return the markdown legend lines."""
+    lines = [""]
+    if lang == "en":
+        lines.append("_Triage I-V: Critical, Emergency, Urgent, Semi-urgent, Non-urgent._")
+        lines.append("_🔴 = A&E is currently managing Triage I/II cases._")
+    else:
+        lines.append("_分流類別 I-V 指危殆、危急、緊急、次緊急及非緊急類別。_")
+        lines.append("_🔴 指急症室正在治理分流類別 I/II 的病人。_")
+    return lines
+
+
+def _update_header(update_time, lang):
+    """Return the update-time description lines."""
+    if not update_time:
+        return []
+    if lang == "en":
+        return [
+            f"\nAs of {update_time}, estimated A&E waiting time upon arrival.",
+            "Half of waiting patients can be seen within the time shown; majority within the time in brackets.",
+        ]
+    return [
+        f"\n於{update_time}，病人到達急症室求診預計等候時間。",
+        "一半輪候病人能在以下時間內就診，大部份人可於括號內顯示的時間就診。",
+    ]
 
 
 # ---------------------------------------------------------------------------
 # Formatting
 # ---------------------------------------------------------------------------
 
-def format_t1_cell(h):
-    """Format T1 cell with managing-case indicator."""
-    t1 = h.get("t1wt", "—")
-    manage = h.get("manageT1case", "")
-    if manage in ("Y", "是"):
-        return f"{t1} 🔴"
-    return t1
-
-
-def format_t2_cell(h):
-    """Format T2 cell with managing-case indicator."""
-    t2 = h.get("t2wt", "—")
-    manage = h.get("manageT2case", "")
-    if manage in ("Y", "是"):
-        return f"{t2} 🔴"
-    return t2
+def format_row(h, lang):
+    """Format a single hospital as a table row."""
+    name = h.get("hospName", "")
+    t1_cell = _triage_cell(h.get("t1wt", "—"), h.get("manageT1case", ""))
+    t2_cell = _triage_cell(h.get("t2wt", "—"), h.get("manageT2case", ""))
+    t3_cell = _pct_cell(h, "t3p50", "t3p95")
+    t45_cell = _pct_cell(h, "t45p50", "t45p95")
+    na_vals = {"N/A", "不適用"}
+    if h.get("manageT1case", "") in na_vals:
+        t1 = h.get("t1wt", "—")
+        t2 = h.get("t2wt", "—")
+        return f"| {name} | ⚠️ **{t1}** | ⚠️ **{t2}** | {t3_cell} | {t45_cell} |"
+    return f"| {name} | {t1_cell} | {t2_cell} | {t3_cell} | {t45_cell} |"
 
 
 def format_all(data, lang):
@@ -152,22 +185,8 @@ def format_all(data, lang):
     by_name = {h.get("hospName", ""): h for h in hospitals}
 
     lines = [_l(lang, "## A&E Waiting Time", "## 急症室等候時間")]
-
-    if update_time:
-        if lang == "en":
-            lines.append(f"\nAs of {update_time}, estimated A&E waiting time upon arrival.")
-            lines.append("Half of waiting patients can be seen within the time shown; majority within the time in brackets.")
-        else:
-            lines.append(f"\n於{update_time}，病人到達急症室求診預計等候時間。")
-            lines.append("一半輪候病人能在以下時間內就診，大部份人可於括號內顯示的時間就診。")
-
-    # Table header
-    if lang == "en":
-        lines.append(f"\n| Hospital | Triage I | Triage II | Triage III | Triage IV & V |")
-        lines.append("|----------|:--------:|:---------:|:----------:|:-------------:|")
-    else:
-        lines.append(f"\n| 醫院 | 分流類別 I | 分流類別 II | 分流類別 III | 分流類別 IV & V |")
-        lines.append("|------|:---------:|:----------:|:-----------:|:--------------:|")
+    lines.extend(_update_header(update_time, lang))
+    lines.extend(_table_header(lang))
 
     regions = REGIONS.get(lang, REGIONS.get("tc"))
     used = set()
@@ -181,81 +200,18 @@ def format_all(data, lang):
             if not h:
                 continue
             used.add(hosp_name)
-
-            name = h.get("hospName", "")
-            t1_cell = format_t1_cell(h)
-            t2_cell = format_t2_cell(h)
-
-            # T3: combine p50 and p95
-            t3p50 = h.get("t3p50", "—")
-            t3p95 = h.get("t3p95", "")
-            t3_cell = f"{t3p50} ({t3p95})" if t3p95 else t3p50
-
-            # T4-5: combine p50 and p95
-            t45p50 = h.get("t45p50", "—")
-            t45p95 = h.get("t45p95", "")
-            t45_cell = f"{t45p50} ({t45p95})" if t45p95 else t45p50
-
-            # Handle "Managing multiple resuscitation cases" spanning T1+T2
-            na_vals = {"N/A", "不適用"}
-            if h.get("manageT1case", "") in na_vals:
-                t1 = h.get("t1wt", "—")
-                t2 = h.get("t2wt", "—")
-                lines.append(f"| {name} | ⚠️ **{t1}** | ⚠️ **{t2}** | {t3_cell} | {t45_cell} |")
-            else:
-                lines.append(f"| {name} | {t1_cell} | {t2_cell} | {t3_cell} | {t45_cell} |")
+            lines.append(format_row(h, lang))
 
     # Any hospitals not in region mapping (fallback)
     remaining = [h for h in hospitals if h.get("hospName", "") not in used]
     if remaining:
         lines.append(f"| **{_l(lang, 'Other', '其他')}** | | | | |")
         for h in remaining:
-            name = h.get("hospName", "")
-            t1_cell = format_t1_cell(h)
-            t2_cell = format_t2_cell(h)
-            t3p50 = h.get("t3p50", "—")
-            t3p95 = h.get("t3p95", "")
-            t3_cell = f"{t3p50} ({t3p95})" if t3p95 else t3p50
-            t45p50 = h.get("t45p50", "—")
-            t45p95 = h.get("t45p95", "")
-            t45_cell = f"{t45p50} ({t45p95})" if t45p95 else t45p50
-            na_vals = {"N/A", "不適用"}
-            if h.get("manageT1case", "") in na_vals:
-                t1 = h.get("t1wt", "—")
-                t2 = h.get("t2wt", "—")
-                lines.append(f"| {name} | ⚠️ **{t1}** | ⚠️ **{t2}** | {t3_cell} | {t45_cell} |")
-            else:
-                lines.append(f"| {name} | {t1_cell} | {t2_cell} | {t3_cell} | {t45_cell} |")
+            lines.append(format_row(h, lang))
 
-    # Legend
-    lines.append("")
-    if lang == "en":
-        lines.append("_Triage I-V: Critical, Emergency, Urgent, Semi-urgent, Non-urgent._")
-        lines.append("_🔴 = A&E is currently managing Triage I/II cases._")
-    else:
-        lines.append("_分流類別 I-V 指危殆、危急、緊急、次緊急及非緊急類別。_")
-        lines.append("_🔴 指急症室正在治理分流類別 I/II 的病人。_")
+    lines.extend(_legend(lang))
 
     return "\n".join(lines)
-
-
-def format_row(h, lang):
-    """Format a single hospital as a table row."""
-    name = h.get("hospName", "")
-    t1_cell = format_t1_cell(h)
-    t2_cell = format_t2_cell(h)
-    t3p50 = h.get("t3p50", "—")
-    t3p95 = h.get("t3p95", "")
-    t3_cell = f"{t3p50} ({t3p95})" if t3p95 else t3p50
-    t45p50 = h.get("t45p50", "—")
-    t45p95 = h.get("t45p95", "")
-    t45_cell = f"{t45p50} ({t45p95})" if t45p95 else t45p50
-    na_vals = {"N/A", "不適用"}
-    if h.get("manageT1case", "") in na_vals:
-        t1 = h.get("t1wt", "—")
-        t2 = h.get("t2wt", "—")
-        return f"| {name} | ⚠️ **{t1}** | ⚠️ **{t2}** | {t3_cell} | {t45_cell} |"
-    return f"| {name} | {t1_cell} | {t2_cell} | {t3_cell} | {t45_cell} |"
 
 
 def format_search(data, query, lang):
@@ -276,34 +232,13 @@ def format_search(data, query, lang):
         return "\n".join(lines)
 
     lines = [_l(lang, "## A&E Waiting Time", "## 急症室等候時間")]
-
-    if update_time:
-        if lang == "en":
-            lines.append(f"\nAs of {update_time}, estimated A&E waiting time upon arrival.")
-            lines.append("Half of waiting patients can be seen within the time shown; majority within the time in brackets.")
-        else:
-            lines.append(f"\n於{update_time}，病人到達急症室求診預計等候時間。")
-            lines.append("一半輪候病人能在以下時間內就診，大部份人可於括號內顯示的時間就診。")
-
-    # Same table format as the full listing
-    if lang == "en":
-        lines.append(f"\n| Hospital | Triage I | Triage II | Triage III | Triage IV & V |")
-        lines.append("|----------|:--------:|:---------:|:----------:|:-------------:|")
-    else:
-        lines.append(f"\n| 醫院 | 分流類別 I | 分流類別 II | 分流類別 III | 分流類別 IV & V |")
-        lines.append("|------|:---------:|:----------:|:-----------:|:--------------:|")
+    lines.extend(_update_header(update_time, lang))
+    lines.extend(_table_header(lang))
 
     for h in matches:
         lines.append(format_row(h, lang))
 
-    # Legend
-    lines.append("")
-    if lang == "en":
-        lines.append("_Triage I-V: Critical, Emergency, Urgent, Semi-urgent, Non-urgent._")
-        lines.append("_🔴 = A&E is currently managing Triage I/II cases._")
-    else:
-        lines.append("_分流類別 I-V 指危殆、危急、緊急、次緊急及非緊急類別。_")
-        lines.append("_🔴 指急症室正在治理分流類別 I/II 的病人。_")
+    lines.extend(_legend(lang))
 
     return "\n".join(lines)
 

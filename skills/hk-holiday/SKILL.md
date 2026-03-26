@@ -11,16 +11,6 @@ argument-hint: "[year] [next] [en|tc|sc]"
 
 Fetch public holiday data from the 1823 government calendar API.
 
-```
-hk-holiday/
-├── SKILL.md              # Skill instructions (this file)
-├── scripts/
-│   ├── run.sh            # Shell wrapper (path resolution)
-│   └── query.py          # Fetches & formats holiday data from 1823 API
-└── references/
-    └── api.md            # API documentation
-```
-
 ## Run
 
 ```bash

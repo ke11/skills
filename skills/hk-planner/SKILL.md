@@ -12,13 +12,6 @@ argument-hint: "[activity] [date range] [calendar:name] [en|tc|sc]"
 
 An orchestrator skill that combines calendar availability, public holidays, and weather forecasts to help plan outings and activities in Hong Kong.
 
-```
-hk-planner/
-├── SKILL.md              # Skill instructions (this file)
-└── references/
-    └── gws-calendar.md   # gws CLI calendar reference
-```
-
 ## Dependencies
 
 This skill requires the `gws` CLI and calls scripts from other skills. Check they exist before using:
@@ -69,8 +62,6 @@ gws calendar calendarList list --format json
 
 Search `items[].summary` for the calendar name (case-insensitive). Use the matching `items[].id` for subsequent queries.
 
-If no calendar name is specified, use `primary` as the calendar ID (the user's default calendar).
-
 If the specified calendar is not found, list available calendars and ask the user to pick one.
 
 ### 2b. Calendar Availability
@@ -81,19 +72,13 @@ Query events in the date range to find which days are already booked.
 
 ### 2c. Public Holidays
 
-Run the hk-holiday skill to get upcoming holidays:
-```bash
-bash .agents/skills/hk-holiday/scripts/run.sh "$DATE_ARGS"
-```
+Invoke the `/hk-holiday` slash command to get upcoming holidays, passing the date range as arguments.
 
 Holidays are good candidates — the user is off work. Long weekends (⭐ streaks) are especially valuable for day trips.
 
 ### 2d. Weather Forecast
 
-For outdoor activities, run the hk-weather skill:
-```bash
-bash .agents/skills/hk-weather/scripts/run.sh "forecast"
-```
+For outdoor activities, invoke the `/hk-weather` slash command to get the forecast.
 
 The 9-day forecast helps assess upcoming weather. Beyond 9 days, weather data isn't available — note this limitation to the user.
 

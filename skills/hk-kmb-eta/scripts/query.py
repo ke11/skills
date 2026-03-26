@@ -3,13 +3,50 @@
 
 Usage: python3 query.py <route> [stop] [terminal] [en|tc] [stops]
 """
-import json, urllib.request, sys, os, re
+import json, urllib.request, urllib.error, sys, os, re
 from datetime import datetime, timezone, timedelta
 
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 DATA_FILE = os.path.join(SCRIPT_DIR, 'data.json')
 BASE = "https://data.etabus.gov.hk/v1/transport/kmb"
 HKT = timezone(timedelta(hours=8))
+
+STRINGS = {
+    'en': {
+        'route': 'Route',
+        'stops': 'All Stops',
+        'stop_name': 'Stop Name',
+        'no_eta': 'No ETA data available.',
+        'unit': 'min',
+        'title': 'Bus ETA',
+        'route_label': 'Route',
+        'stop_label': 'Stop',
+        'eta_col': 'ETA',
+        'remaining_col': 'Remaining',
+        'remark_col': 'Remark',
+        'updated': 'Updated',
+        'source': 'Source: DATA.GOV.HK / KMB',
+        'outbound': 'Outbound',
+        'inbound': 'Inbound',
+    },
+    'tc': {
+        'route': '路線',
+        'stops': '車站列表',
+        'stop_name': '車站名稱',
+        'no_eta': '目前沒有到站時間資料。',
+        'unit': '分鐘',
+        'title': '巴士到站時間',
+        'route_label': '路線',
+        'stop_label': '車站',
+        'eta_col': '預計到達',
+        'remaining_col': '剩餘時間',
+        'remark_col': '備註',
+        'updated': '更新時間',
+        'source': '資料來源：DATA.GOV.HK / 九巴',
+        'outbound': '出站',
+        'inbound': '入站',
+    },
+}
 
 
 def sanitize(obj):
@@ -71,33 +108,35 @@ def usage():
 
 
 def list_stops(db, route, lang):
+    s = STRINGS[lang]
     found = False
-    for label, dir_tc, dir_en in [('O', '出站', 'Outbound'), ('I', '入站', 'Inbound')]:
+    dir_labels = {'O': s['outbound'], 'I': s['inbound']}
+    for label in ['O', 'I']:
         rk = f'{route}/{label}/1'
         if rk not in db.get('routes', {}) or rk not in db.get('route_stops', {}):
             continue
         rt = db['routes'][rk]
         rs = db['route_stops'][rk]
         found = True
-        dl = dir_en if lang == 'en' else dir_tc
+        dl = dir_labels[label]
         orig = rt.get(f'orig_{lang}', rt.get('orig_tc', ''))
         dest = rt.get(f'dest_{lang}', rt.get('dest_tc', ''))
-        h_route = 'Route' if lang == 'en' else '路線'
-        h_stops = 'All Stops' if lang == 'en' else '車站列表'
-        print(f'## {h_route} {route} — {h_stops}\n')
+        print(f'## {s["route"]} {route} — {s["stops"]}\n')
         print(f'### {orig} → {dest} ({dl})\n')
-        h = 'Stop Name' if lang == 'en' else '車站名稱'
-        print(f'| # | {h} |')
+        print(f'| # | {s["stop_name"]} |')
         print('|---|----------|')
         for seq, sid in rs:
-            s = db['stops'].get(sid)
-            if s:
-                print(f'| {seq} | {s.get(lang, s.get("tc", ""))} |')
+            st = db['stops'].get(sid)
+            if st:
+                print(f'| {seq} | {st.get(lang, st.get("tc", ""))} |')
         print()
     if not found:
         print('ERROR=NO_ROUTE')
     else:
-        hint = f'_Usage: /hk-kmb-eta {route} <stop name> <terminal> to query ETA_' if lang == 'en' else f'_使用方式: /hk-kmb-eta {route} <車站名稱> <總站名> 查詢到站時間_'
+        if lang == 'en':
+            hint = f'_Usage: /hk-kmb-eta {route} <stop name> <terminal> to query ETA_'
+        else:
+            hint = f'_使用方式: /hk-kmb-eta {route} <車站名稱> <總站名> 查詢到站時間_'
         print(hint)
 
 
@@ -178,40 +217,40 @@ def query_eta(db, route, remaining, lang):
     try:
         with urllib.request.urlopen(f'{BASE}/eta/{stop_id}/{route}/1', timeout=10) as r:
             eta_data = sanitize(json.loads(r.read()))
-    except:
+    except (urllib.error.URLError, json.JSONDecodeError, OSError):
         eta_data = None
 
     # Format output
+    s = STRINGS[lang]
     rt = routes.get(direction, {})
     orig = rt.get(f'orig_{lang}', rt.get('orig_tc', ''))
     dest = rt.get(f'dest_{lang}', rt.get('dest_tc', ''))
     stop_name = stop_en if lang == 'en' else stop_tc
 
     if lang == 'en':
-        print(f'## Bus ETA — Route {route}\n')
-        print(f'**Route**: {orig} → {dest}')
-        print(f'**Stop**: {stop_name} (Stop #{seq})\n')
+        print(f'## {s["title"]} — {s["route"]} {route}\n')
+        print(f'**{s["route_label"]}**: {orig} → {dest}')
+        print(f'**{s["stop_label"]}**: {stop_name} (Stop #{seq})\n')
     else:
-        print(f'## 巴士到站時間 — {route}\n')
-        print(f'**路線**: {orig} → {dest}')
-        print(f'**車站**: {stop_name} (第{seq}站)\n')
+        print(f'## {s["title"]} — {route}\n')
+        print(f'**{s["route_label"]}**: {orig} → {dest}')
+        print(f'**{s["stop_label"]}**: {stop_name} (第{seq}站)\n')
 
     now = datetime.now(HKT)
     entries = [e for e in (eta_data or {}).get('data', []) if e.get('dir') == direction]
 
     if not entries:
-        print('No ETA data available.' if lang == 'en' else '目前沒有到站時間資料。')
+        print(s['no_eta'])
         return
 
     rmk_key = f'rmk_{lang}'
+    print(f'| # | {s["eta_col"]} | {s["remaining_col"]} | {s["remark_col"]} |')
     if lang == 'en':
-        print('| # | ETA | Remaining | Remark |')
         print('|---|-----|-----------|--------|')
     else:
-        print('| # | 預計到達 | 剩餘時間 | 備註 |')
         print('|---|---------|---------|------|')
 
-    unit = 'min' if lang == 'en' else '分鐘'
+    unit = s['unit']
     for i, e in enumerate(entries[:3], 1):
         eta_str = e.get('eta', '')
         rmk = e.get(rmk_key, '') or ''
@@ -221,7 +260,7 @@ def query_eta(db, route, remaining, lang):
                 time_str = eta_time.strftime('%H:%M')
                 diff = (eta_time - now).total_seconds() / 60
                 remaining_str = '---' if diff < 0 else f'<1 {unit}' if diff < 1 else f'{int(diff)} {unit}'
-            except:
+            except (ValueError, KeyError):
                 time_str = '---'
                 remaining_str = '---'
         else:
@@ -232,16 +271,12 @@ def query_eta(db, route, remaining, lang):
     ts = (eta_data or {}).get('generated_timestamp', '')
     try:
         ts_str = datetime.fromisoformat(ts).strftime('%Y-%m-%d %H:%M HKT')
-    except:
+    except (ValueError, KeyError):
         ts_str = ts
 
     print()
-    if lang == 'en':
-        print(f'_Updated: {ts_str}_')
-        print('_Source: DATA.GOV.HK / KMB_')
-    else:
-        print(f'_更新時間: {ts_str}_')
-        print('_資料來源：DATA.GOV.HK / 九巴_')
+    print(f'_{s["updated"]}: {ts_str}_')
+    print(f'_{s["source"]}_')
 
 
 if __name__ == '__main__':
